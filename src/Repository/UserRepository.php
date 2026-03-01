@@ -14,12 +14,6 @@ use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 /**
  * @extends ServiceEntityRepository<User>
  *
- * @implements PasswordUpgraderInterface<User>
- *
- * @method User|null find($id, $lockMode = null, $lockVersion = null)
- * @method User|null findOneBy(array $criteria, array $orderBy = null)
- * @method User[]    findAll()
- * @method User[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class UserRepository extends ServiceEntityRepository implements PasswordUpgraderInterface
 {
@@ -42,6 +36,9 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->getEntityManager()->flush();
     }
 
+    /**
+     * @return list<array{id: int, name: string, mediaCount: int}>
+     */
     public function findForActiveGuestsWithMediaCount(int $limit, int $offset): array
     {
         $conn = $this->getEntityManager()->getConnection();
@@ -56,21 +53,25 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         OFFSET :offset";
 
         return $conn->fetchAllAssociative(
-        $sql,
-        [
-            'admin'  => '["ROLE_ADMIN"]',
-            'limit'  => $limit,
-            'offset' => $offset,
-        ],
-        [
-            'admin'  => ParameterType::STRING,
-            'limit'  => ParameterType::INTEGER,
-            'offset' => ParameterType::INTEGER,
-        ]
-    );
+            $sql,
+            [
+                'admin'  => '["ROLE_ADMIN"]',
+                'limit'  => $limit,
+                'offset' => $offset,
+            ],
+            [
+                'admin'  => ParameterType::STRING,
+                'limit'  => ParameterType::INTEGER,
+                'offset' => ParameterType::INTEGER,
+            ]
+        );
     }
 
-    public function findGuests(int $limit, int $offset, bool $onlyActive = false): array
+
+    /**
+     * @return list<User>
+     */
+    public function findGuests(int $limit, int $offset): array
     {
         $connection = $this->getEntityManager()->getConnection();
 
@@ -102,6 +103,4 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->getQuery()
             ->getOneOrNullResult();
     }
-
-    
 }

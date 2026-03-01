@@ -61,6 +61,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     )]
     private ?string $email = null;
 
+     /** @var Collection<int, \App\Entity\Media> */
     #[ORM\OneToMany(targetEntity: Media::class, mappedBy: 'user', orphanRemoval: true)]
     private Collection $medias;
 
@@ -141,6 +142,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    /** @return Collection<int, Media> */
     public function getMedias(): Collection
     {
         return $this->medias;
@@ -227,11 +229,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->plainPassword;
     }
 
-    /**
-     * Set the value of plainPassword
-     *
-     * @return  self
-     */
     public function setPlainPassword(?string $plainPassword): static
     {
         $this->plainPassword = $plainPassword;

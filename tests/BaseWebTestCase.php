@@ -18,7 +18,7 @@ abstract class BaseWebTestCase extends WebTestCase
         $this->client = static::createClient();
     }
 
-    protected function get($uri): Crawler
+    protected function get(string $uri): Crawler
     {
         return $this->client->request('GET', $uri);
     }

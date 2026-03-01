@@ -108,7 +108,8 @@ class GuestPageTest extends BaseWebTestCase
         $this->assertResponseIsSuccessful();
     }
 
-    public function testSetPasswordPageRendersAndActivateGuests(){
+    public function testSetPasswordPageRendersAndActivateGuests():void
+    {
 
         
         $container = static::getContainer();
@@ -150,7 +151,8 @@ class GuestPageTest extends BaseWebTestCase
     }
 
 
-    public function testSetPasswordPageRedirectToHomePageWhenTokenIsInvalide(){
+    public function testSetPasswordPageRedirectToHomePageWhenTokenIsInvalide():void
+    {
         
         $fakeToken = str_repeat('a', 64);
         $this->get('/set-password/'.$fakeToken);

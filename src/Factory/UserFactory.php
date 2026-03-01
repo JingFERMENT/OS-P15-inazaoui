@@ -11,7 +11,7 @@ use Zenstruck\Foundry\Persistence\PersistentObjectFactory;
  */
 final class UserFactory extends PersistentObjectFactory
 {
-    private static ?string $hashedPassword = null;
+    private static string $hashedPassword;
     /**
      * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#factories-as-services
      *
@@ -21,8 +21,8 @@ final class UserFactory extends PersistentObjectFactory
     {
         parent::__construct();
         // Hash the password once and store it for reuse
-        if (self::$hashedPassword === null) {
-            self::$hashedPassword = $passwordHasher->hashPassword(new User(), 'password123@');
+        if (!isset(self::$hashedPassword)) {
+            self::$hashedPassword = $this->passwordHasher->hashPassword(new User(), 'password123@');
         }
     }
 

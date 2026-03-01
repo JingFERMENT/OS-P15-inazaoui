@@ -10,7 +10,7 @@ use Zenstruck\Foundry\Persistence\PersistentObjectFactory;
  */
 final class MediaFactory extends PersistentObjectFactory
 {
-    private static int $pathIndex = 1;
+    private static int $pathIndex;
 
     /**
      * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#factories-as-services
@@ -37,6 +37,9 @@ final class MediaFactory extends PersistentObjectFactory
     {
 
         return function() {
+            if (!isset(self::$pathIndex)) {
+                self::$pathIndex = 1;
+            }
             
         $n = self::$pathIndex++;
         return [

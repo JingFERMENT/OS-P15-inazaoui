@@ -14,7 +14,7 @@ final class PortfolioPageTest extends BaseWebTestCase
         $this->assertPageRequiresLogin('/portfolio');
     }
 
-    public function testPortfolioPageRendersAlbumsAndMediaWhenLoggedIn()
+    public function testPortfolioPageRendersAlbumsAndMediaWhenLoggedIn():void
     {
         $this->loginAs('activeGuest@test.com');
         $crawler = $this->get('/portfolio');

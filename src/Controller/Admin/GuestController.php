@@ -8,7 +8,6 @@ use App\Form\SetPasswordType;
 use App\Repository\UserRepository;
 use App\Service\GuestInvitationService;
 use Doctrine\ORM\EntityManagerInterface;
-use DateTimeImmutable;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Clock\ClockInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -51,7 +50,8 @@ final class GuestController extends AbstractController
     public function add(
         Request $request,
         GuestInvitationService $guestInvitationService
-    ) {
+    ) :Response
+    {
         $guest = new User();
         $form = $this->createForm(GuestType::class, $guest);
         $form->handleRequest($request);
@@ -116,7 +116,8 @@ final class GuestController extends AbstractController
         UserRepository $guestRepo,
         UserPasswordHasherInterface $guestPasswordHasher,
         ClockInterface $clock
-    ) {
+    ) :Response
+    {
         
         $now = $clock->now();
         $guest = $guestRepo->findValidInvitation($invitationToken, $now);

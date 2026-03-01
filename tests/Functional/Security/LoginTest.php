@@ -22,13 +22,13 @@ class LoginTest extends BaseWebTestCase
 
     // test wrong username and password and blocked guest
     #[DataProvider('provideInvalidLogins')]
-    public function testLoginFails(string $username, string $password, string $expectedErrorContains):void 
+    public function testLoginFails(string $username, string $password, string $expectedErrorContains): void
     {
         $this->get('/login');
 
         $this->assertResponseIsSuccessful();
-        
-        $this->client->submitForm('Connexion', [ 
+
+        $this->client->submitForm('Connexion', [
             '_username' => $username,
             '_password' => $password,
         ]);
@@ -38,8 +38,11 @@ class LoginTest extends BaseWebTestCase
 
         $this->assertAnySelectorTextContains('.alert-danger', $expectedErrorContains);
     }
-    
-    public static function provideInvalidLogins():iterable
+
+    /**
+     * @return iterable<string, array{string, string, string}>
+     */
+    public static function provideInvalidLogins(): iterable
     {
         yield 'wrong password' => [
             'activeGuest@test.com',
@@ -59,6 +62,4 @@ class LoginTest extends BaseWebTestCase
             "Votre compte est bloqué ou non-activé. Veuillez contacter l'administrateur.",
         ];
     }
-
-    
 }

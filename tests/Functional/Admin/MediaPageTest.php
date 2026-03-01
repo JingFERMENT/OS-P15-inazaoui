@@ -16,7 +16,7 @@ class MediaPageTest extends BaseWebTestCase
         $this->assertResponseRedirects('/login');
     }
 
-    public function testMediaPageIndexRendersAsAdmin()
+    public function testMediaPageIndexRendersAsAdmin():void
     {
 
         $this->loginAs('ina@zaoui.com');
@@ -28,7 +28,7 @@ class MediaPageTest extends BaseWebTestCase
         $this->assertAnySelectorTextContains('a.nav-link', 'Albums');
     }
 
-    public function testMediaPageCanAddMediaAsAdmin()
+    public function testMediaPageCanAddMediaAsAdmin():void
     {
 
         $this->loginAs('ina@zaoui.com');
@@ -69,7 +69,7 @@ class MediaPageTest extends BaseWebTestCase
         $this->assertResponseIsSuccessful();
     }
 
-    public function testMediaPageIndexRendersAsActiveGuest()
+    public function testMediaPageIndexRendersAsActiveGuest():void
     {
         $this->loginAs('activeGuest@test.com');
 

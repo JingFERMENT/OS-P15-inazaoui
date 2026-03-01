@@ -39,7 +39,7 @@ final class GuestspageTest extends BaseWebTestCase
         $this->assertMatchesRegularExpression('#^/guest/\d+$#', $this->client->getRequest()->getPathInfo());
     }
 
-    public function testGuestPagesDoesNotShowBlockedGuests()
+    public function testGuestPagesDoesNotShowBlockedGuests():void
     {
         $this->loginAs('blockedGuest@test.com');
 
