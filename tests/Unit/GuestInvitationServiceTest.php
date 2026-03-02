@@ -15,7 +15,6 @@ class GuestInvitationServiceTest extends TestCase
 {
     public function testGuestInvitationPrepareUsersPersistsAndSendEmail(): void
     {
-
         $em = $this->createMock(EntityManagerInterface::class);
         $mailer = $this->createMock(MailerInterface::class);
         $urlGenerator = $this->createMock(UrlGeneratorInterface::class);
@@ -32,27 +31,28 @@ class GuestInvitationServiceTest extends TestCase
             ->method('generate')
             ->willReturnCallback(
                 function (string $route, array $params = []) {
-                    if ($route === 'guest_set_password') {
-                        return 'https://sitename.com/set-password/' . $params['invitationToken'];
+                    if ('guest_set_password' === $route) {
+                        return 'https://sitename.com/set-password/'.$params['invitationToken'];
                     }
 
-                    if ($route === 'home') {
+                    if ('home' === $route) {
                         return 'https://sitename.com/';
                     }
 
-                    throw new \RuntimeException('Unexpected route: ' . $route);
+                    throw new \RuntimeException('Unexpected route: '.$route);
                 }
             );
 
         $em->expects($this->once())->method('persist')->with($guest);
         $em->expects($this->once())->method('flush');
 
-        // capture the email 
+        // capture the email
         $mailer
             ->expects($this->once())
             ->method('send')
             ->with($this->callback(function ($email) {
                 $this->assertInstanceOf(TemplatedEmail::class, $email);
+
                 return true;
             }));
 
@@ -60,7 +60,7 @@ class GuestInvitationServiceTest extends TestCase
 
         $returnedToken = $service->invite($guest, expiredDays: 2);
 
-        //Returned token
+        // Returned token
         $this->assertSame('Password123@', $returnedToken);
 
         // User prepared

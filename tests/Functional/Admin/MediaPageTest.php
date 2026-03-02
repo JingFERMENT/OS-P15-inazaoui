@@ -4,9 +4,9 @@ namespace App\Tests\Functional\Admin;
 
 use App\Entity\Album;
 use App\Repository\UserRepository;
+use App\Tests\BaseWebTestCase;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use App\Tests\BaseWebTestCase;
 
 class MediaPageTest extends BaseWebTestCase
 {
@@ -16,9 +16,8 @@ class MediaPageTest extends BaseWebTestCase
         $this->assertResponseRedirects('/login');
     }
 
-    public function testMediaPageIndexRendersAsAdmin():void
+    public function testMediaPageIndexRendersAsAdmin(): void
     {
-
         $this->loginAs('ina@zaoui.com');
         $crawler = $this->get('/admin/media');
 
@@ -28,9 +27,8 @@ class MediaPageTest extends BaseWebTestCase
         $this->assertAnySelectorTextContains('a.nav-link', 'Albums');
     }
 
-    public function testMediaPageCanAddMediaAsAdmin():void
+    public function testMediaPageCanAddMediaAsAdmin(): void
     {
-
         $this->loginAs('ina@zaoui.com');
         $crawler = $this->get('/admin/media');
 
@@ -41,7 +39,7 @@ class MediaPageTest extends BaseWebTestCase
         $admin = $guestRepo->findOneBy(['email' => 'ina@zaoui.com']);
         $adminId = (string) $admin->getId();
 
-        // add the media 
+        // add the media
         $addLink = $crawler->filter('a.btn[href="/admin/media/add"]')->link();
         $this->client->click($addLink);
         $this->assertResponseIsSuccessful();
@@ -69,7 +67,7 @@ class MediaPageTest extends BaseWebTestCase
         $this->assertResponseIsSuccessful();
     }
 
-    public function testMediaPageIndexRendersAsActiveGuest():void
+    public function testMediaPageIndexRendersAsActiveGuest(): void
     {
         $this->loginAs('activeGuest@test.com');
 
@@ -83,7 +81,6 @@ class MediaPageTest extends BaseWebTestCase
 
     public function testMediaPageCanAddMediaAsActiveGuest(): void
     {
-
         $this->loginAs('activeGuest@test.com');
 
         $crawler = $this->get('/admin/media');
@@ -116,7 +113,6 @@ class MediaPageTest extends BaseWebTestCase
 
     public function testMediaPageCanDeleteMedia(): void
     {
-
         $this->loginAs('activeGuest@test.com');
 
         $crawler = $this->get('/admin/media');
@@ -131,7 +127,6 @@ class MediaPageTest extends BaseWebTestCase
 
     public function testDeleteMediaWithInvalidCsrfReturns403(): void
     {
-
         $this->loginAs('ina@zaoui.com');
         $crawler = $this->get('/admin/media');
         $this->assertResponseIsSuccessful();
@@ -142,7 +137,7 @@ class MediaPageTest extends BaseWebTestCase
         $actionInFirstDeleteFormNode = $firstDeleteFormNode->attr('action');
 
         $this->client->request('POST', $actionInFirstDeleteFormNode, [
-            '_token' => 'invalid-token'
+            '_token' => 'invalid-token',
         ]);
 
         $this->assertResponseStatusCodeSame(403);

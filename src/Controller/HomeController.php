@@ -3,8 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\Album;
-use App\Entity\User;
 use App\Entity\Media;
+use App\Entity\User;
 use App\Repository\AlbumRepository;
 use App\Repository\MediaRepository;
 use App\Repository\UserRepository;
@@ -36,6 +36,7 @@ class HomeController extends AbstractController
 
         $guests = $cache->get('guests_with_media_count', function (ItemInterface $item) use ($userRepository, $limit, $offset) {
             $item->expiresAfter(300); // adapter à la fréquence des mises à jour
+
             return $userRepository->findForActiveGuestsWithMediaCount($limit, $offset);
         });
 
@@ -45,7 +46,7 @@ class HomeController extends AbstractController
             'guests' => $guests,
             'total' => $total,
             'limit' => $limit,
-            'page' => $page
+            'page' => $page,
         ]);
     }
 
@@ -53,7 +54,7 @@ class HomeController extends AbstractController
     public function guest(
         #[MapEntity(id: 'id')] User $guest,
         Request $request,
-        MediaRepository $mediaRepository
+        MediaRepository $mediaRepository,
     ): Response {
         $page = $request->query->getInt('page', 1);
         $limit = 6;
@@ -74,8 +75,7 @@ class HomeController extends AbstractController
             'media' => $medias,
             'total' => $total,
             'limit' => $limit,
-            'page' => $page
-
+            'page' => $page,
         ]);
     }
 
@@ -95,12 +95,12 @@ class HomeController extends AbstractController
 
         $albums = $cache->get('portfolio_albums', function (ItemInterface $item) use ($albumsRepo) {
             $item->expiresAfter(3600);
+
             return $albumsRepo->findAll();
         });
 
         $albumId = $album?->getId() ?? 0;
         $userId = method_exists($user, 'getId') ? $user->getId() : 0;
-
 
         $cacheKey = sprintf('portfolio_medias_user_%s_album_%s', $userId, $albumId);
 
@@ -108,7 +108,7 @@ class HomeController extends AbstractController
         $medias = $cache->get($cacheKey, function (ItemInterface $item) use ($mediasRepo, $album) {
             $item->expiresAfter(300); // 5 mins
 
-            if ($album !== null) {
+            if (null !== $album) {
                 return $mediasRepo->findBy(['album' => $album], ['id' => 'ASC']);
             }
 
@@ -118,7 +118,7 @@ class HomeController extends AbstractController
         return $this->render('front/portfolio.html.twig', [
             'albums' => $albums,
             'album' => $album,
-            'medias' => $medias
+            'medias' => $medias,
         ]);
     }
 

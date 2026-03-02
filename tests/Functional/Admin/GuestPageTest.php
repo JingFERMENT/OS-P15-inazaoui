@@ -3,9 +3,8 @@
 namespace App\Tests\Functional\Admin;
 
 use App\Entity\User;
-use DateTimeImmutable;
-use Doctrine\ORM\EntityManagerInterface;
 use App\Tests\BaseWebTestCase;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
 
 class GuestPageTest extends BaseWebTestCase
@@ -13,7 +12,7 @@ class GuestPageTest extends BaseWebTestCase
     public function testGuestPageRequiresLogin(): void
     {
         $this->get('/admin/guests');
-        $this->assertResponseRedirects('/login');  
+        $this->assertResponseRedirects('/login');
     }
 
     public function testGuestPageRequiresAdmin(): void
@@ -34,7 +33,8 @@ class GuestPageTest extends BaseWebTestCase
         $this->assertAnySelectorTextContains('a.nav-link', 'Albums');
     }
 
-    public function testGuestPageCanAddGuest(): void {
+    public function testGuestPageCanAddGuest(): void
+    {
         $this->loginAs('ina@zaoui.com');
         $crawler = $this->get('/admin/guests');
 
@@ -45,12 +45,12 @@ class GuestPageTest extends BaseWebTestCase
 
         $email = 'guesttest@test.com';
         $name = 'guest test';
-        $description = "guest description test";
+        $description = 'guest description test';
 
         $form = $crawler->selectButton('Ajouter')->form(
-            [   'guest[name]' => $name,
+            ['guest[name]' => $name,
                 'guest[email]' => $email,
-                'guest[description]' => $description,],
+                'guest[description]' => $description, ],
         );
 
         $this->client->submit($form);
@@ -61,11 +61,12 @@ class GuestPageTest extends BaseWebTestCase
 
         $this->assertAnySelectorTextContains(
             '.alert-success',
-            "Invité ajouté avec succès"
+            'Invité ajouté avec succès'
         );
     }
-       
-    public function testGuestPageCanDisableGuest():void {
+
+    public function testGuestPageCanDisableGuest(): void
+    {
         $this->loginAs('ina@zaoui.com');
         $crawler = $this->get('/admin/guests');
 
@@ -78,24 +79,24 @@ class GuestPageTest extends BaseWebTestCase
         $this->client->followRedirect();
         $this->assertResponseIsSuccessful();
     }
-    
 
-    public function testGuestPageCanEnableGuest():void {
+    public function testGuestPageCanEnableGuest(): void
+    {
         $this->loginAs('ina@zaoui.com');
         $crawler = $this->get('/admin/guests');
         $this->assertResponseIsSuccessful();
-        
+
         $unblockFormNode = $crawler->filter('form[action^="/admin/guest/enable/"]');
         $this->assertGreaterThan(0, $unblockFormNode->count(), "Pas d'invité à débloquer");
 
         $this->client->submit($unblockFormNode->form());
         $this->assertResponseRedirects('/admin/guests');
         $this->client->followRedirect();
-        $this->assertResponseIsSuccessful(); 
+        $this->assertResponseIsSuccessful();
     }
-       
-    public function testGuestPageCanDeleteGuest(): void {
-        
+
+    public function testGuestPageCanDeleteGuest(): void
+    {
         $this->loginAs('ina@zaoui.com');
         $crawler = $this->get('/admin/guests');
         $this->assertResponseIsSuccessful();
@@ -108,10 +109,8 @@ class GuestPageTest extends BaseWebTestCase
         $this->assertResponseIsSuccessful();
     }
 
-    public function testSetPasswordPageRendersAndActivateGuests():void
+    public function testSetPasswordPageRendersAndActivateGuests(): void
     {
-
-        
         $container = static::getContainer();
         $em = $container->get(EntityManagerInterface::class);
 
@@ -123,7 +122,7 @@ class GuestPageTest extends BaseWebTestCase
 
         $token = bin2hex(random_bytes(32));
         $guest->setInvitationToken($token);
-        $guest->setInvitationExpiredAt(new DateTimeImmutable('+2 days'));
+        $guest->setInvitationExpiredAt(new \DateTimeImmutable('+2 days'));
         $em->persist($guest);
         $em->flush();
 
@@ -150,23 +149,20 @@ class GuestPageTest extends BaseWebTestCase
         $this->assertNull($reloaded->getInvitationToken());
     }
 
-
-    public function testSetPasswordPageRedirectToHomePageWhenTokenIsInvalide():void
+    public function testSetPasswordPageRedirectToHomePageWhenTokenIsInvalide(): void
     {
-        
         $fakeToken = str_repeat('a', 64);
         $this->get('/set-password/'.$fakeToken);
 
-        $this->assertResponseRedirects('/'); 
+        $this->assertResponseRedirects('/');
         $this->client->followRedirect();
 
         $this->assertSelectorExists('.alert-danger');
         $this->assertSelectorTextContains('.alert-danger', 'Invitation invalide ou expirée.');
-
     }
 
-    public function testDisableGuestWithInvalidCsrfReturns403(): void {
-
+    public function testDisableGuestWithInvalidCsrfReturns403(): void
+    {
         $this->loginAs('ina@zaoui.com');
 
         $crawler = $this->get('/admin/guests');
@@ -178,14 +174,14 @@ class GuestPageTest extends BaseWebTestCase
         $actionInFirstBlockFormNode = $firstBlockFormNode->attr('action');
 
         $this->client->request('POST', $actionInFirstBlockFormNode, [
-            '_token' => 'invalid-token'
+            '_token' => 'invalid-token',
         ]);
 
-         $this->assertResponseStatusCodeSame(403);
+        $this->assertResponseStatusCodeSame(403);
     }
 
-     public function testEnableGuestWithInvalidCsrfReturns403(): void {
-
+    public function testEnableGuestWithInvalidCsrfReturns403(): void
+    {
         $this->loginAs('ina@zaoui.com');
 
         $crawler = $this->get('/admin/guests');
@@ -197,14 +193,14 @@ class GuestPageTest extends BaseWebTestCase
         $actionInFirstEnableFormNode = $firstEnableFormNode->attr('action');
 
         $this->client->request('POST', $actionInFirstEnableFormNode, [
-            '_token' => 'invalid-token'
+            '_token' => 'invalid-token',
         ]);
 
-         $this->assertResponseStatusCodeSame(403);
+        $this->assertResponseStatusCodeSame(403);
     }
 
-     public function testDeleteGuestWithInvalidCsrfReturns403(): void {
-
+    public function testDeleteGuestWithInvalidCsrfReturns403(): void
+    {
         $this->loginAs('ina@zaoui.com');
 
         $crawler = $this->get('/admin/guests');
@@ -216,9 +212,9 @@ class GuestPageTest extends BaseWebTestCase
         $actionInFirstDeleteFormNode = $firstDeleteFormNode->attr('action');
 
         $this->client->request('POST', $actionInFirstDeleteFormNode, [
-            '_token' => 'invalid-token'
+            '_token' => 'invalid-token',
         ]);
 
-         $this->assertResponseStatusCodeSame(403);
-    }  
+        $this->assertResponseStatusCodeSame(403);
+    }
 }

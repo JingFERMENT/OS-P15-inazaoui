@@ -16,7 +16,6 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-
 final class GuestController extends AbstractController
 {
     #[IsGranted('ROLE_ADMIN')]
@@ -40,7 +39,7 @@ final class GuestController extends AbstractController
                 'guests' => $guests,
                 'total' => $total,
                 'page' => $page,
-                'limit' => $limit
+                'limit' => $limit,
             ]
         );
     }
@@ -49,9 +48,8 @@ final class GuestController extends AbstractController
     #[Route('/admin/guest/add', name: 'admin_guest_add')]
     public function add(
         Request $request,
-        GuestInvitationService $guestInvitationService
-    ) :Response
-    {
+        GuestInvitationService $guestInvitationService,
+    ): Response {
         $guest = new User();
         $form = $this->createForm(GuestType::class, $guest);
         $form->handleRequest($request);
@@ -59,6 +57,7 @@ final class GuestController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $guestInvitationService->invite($guest);
             $this->addFlash('success', 'Invité ajouté avec succès. L\'email d’activation est envoyé.');
+
             return $this->redirectToRoute('admin_guest_index');
         }
 
@@ -69,12 +68,13 @@ final class GuestController extends AbstractController
     #[Route('/admin/guest/disable/{id}', name: 'admin_guest_disable', methods: ['POST'])]
     public function disable(User $guest, Request $request, EntityManagerInterface $em): Response
     {
-        if (!$this->isCsrfTokenValid('guest_disable_' . $guest->getId(), (string) $request->request->get('_token'))) {
+        if (!$this->isCsrfTokenValid('guest_disable_'.$guest->getId(), (string) $request->request->get('_token'))) {
             throw $this->createAccessDeniedException();
         }
         $guest->setIsActive(false);
 
         $em->flush();
+
         return $this->redirectToRoute('admin_guest_index');
     }
 
@@ -82,12 +82,13 @@ final class GuestController extends AbstractController
     #[Route('/admin/guest/enable/{id}', name: 'admin_guest_enable', methods: ['POST'])]
     public function enable(User $guest, Request $request, EntityManagerInterface $em): Response
     {
-        if (!$this->isCsrfTokenValid('guest_enable_' . $guest->getId(), (string) $request->request->get('_token'))) {
+        if (!$this->isCsrfTokenValid('guest_enable_'.$guest->getId(), (string) $request->request->get('_token'))) {
             throw $this->createAccessDeniedException();
         }
         $guest->setIsActive(true);
 
         $em->flush();
+
         return $this->redirectToRoute('admin_guest_index');
     }
 
@@ -95,19 +96,20 @@ final class GuestController extends AbstractController
     #[Route('/admin/guest/delete/{id}', name: 'admin_guest_delete', methods: ['POST'])]
     public function delete(User $guest, Request $request, EntityManagerInterface $em): Response
     {
-        if (!$this->isCsrfTokenValid('guest_delete_' . $guest->getId(), (string) $request->request->get('_token'))) {
+        if (!$this->isCsrfTokenValid('guest_delete_'.$guest->getId(), (string) $request->request->get('_token'))) {
             throw $this->createAccessDeniedException();
         }
         $em->remove($guest);
 
         $em->flush();
+
         return $this->redirectToRoute('admin_guest_index');
     }
 
-    #[Route('/set-password/{invitationToken}', 
-        name: 'guest_set_password', 
-        methods:['GET', 'POST'],
-        requirements:['invitationToken' => '[A-Fa-f0-9]{64}']
+    #[Route('/set-password/{invitationToken}',
+        name: 'guest_set_password',
+        methods: ['GET', 'POST'],
+        requirements: ['invitationToken' => '[A-Fa-f0-9]{64}']
     )]
     public function setGuestPassword(
         string $invitationToken,
@@ -115,16 +117,15 @@ final class GuestController extends AbstractController
         EntityManagerInterface $em,
         UserRepository $guestRepo,
         UserPasswordHasherInterface $guestPasswordHasher,
-        ClockInterface $clock
-    ) :Response
-    {
-        
+        ClockInterface $clock,
+    ): Response {
         $now = $clock->now();
         $guest = $guestRepo->findValidInvitation($invitationToken, $now);
 
         if (!$guest) {
             $this->addFlash('danger', 'Invitation invalide ou expirée.');
-            return $this->redirectToRoute('home'); 
+
+            return $this->redirectToRoute('home');
         }
 
         $form = $this->createForm(SetPasswordType::class, $guest);
@@ -138,11 +139,11 @@ final class GuestController extends AbstractController
             $guest->setIsActive(true);
             $guest->setInvitationExpiredAt(null);
             $guest->setInvitationToken(null);
-            
+
             $em->flush();
 
             $this->addFlash('success', 'Activation réussie ! Tu peux te connecter sur le site.');
-            
+
             return $this->redirectToRoute('home');
         }
 

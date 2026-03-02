@@ -3,13 +3,12 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
-use DateTimeImmutable;
-use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
@@ -25,13 +24,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column]
     #[Assert\NotBlank(
-        message: "Le nom est obligatoire."
+        message: 'Le nom est obligatoire.'
     )]
     #[Assert\Length(
         min: 2,
         max: 255,
-        minMessage: "Le prénom doit avoir au moins {{ limit }} caractères.",
-        maxMessage: "Le prénom ne peut pas dépasser {{ limit }} caractères. "
+        minMessage: 'Le prénom doit avoir au moins {{ limit }} caractères.',
+        maxMessage: 'Le prénom ne peut pas dépasser {{ limit }} caractères. '
     )]
     private ?string $name = null;
 
@@ -53,33 +52,33 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $description = null;
 
     #[ORM\Column(length: 180, unique: true)]
-    #[Assert\NotBlank(message: "L’email est obligatoire.")]
-    #[Assert\Email(message: "Merci de saisir un email valide.")]
+    #[Assert\NotBlank(message: 'L’email est obligatoire.')]
+    #[Assert\Email(message: 'Merci de saisir un email valide.')]
     #[Assert\Length(
         max: 180,
-        maxMessage: "L’email ne peut pas dépasser {{ limit }} caractères."
+        maxMessage: 'L’email ne peut pas dépasser {{ limit }} caractères.'
     )]
     private ?string $email = null;
 
-     /** @var Collection<int, \App\Entity\Media> */
+    /** @var Collection<int, Media> */
     #[ORM\OneToMany(targetEntity: Media::class, mappedBy: 'user', orphanRemoval: true)]
     private Collection $medias;
 
     #[ORM\Column(options: ['default' => true])]
     private bool $isActive = true;
 
-    #[ORM\Column (length:64, unique: true, nullable: true)]
+    #[ORM\Column(length: 64, unique: true, nullable: true)]
     private ?string $invitationToken = null;
 
-    #[ORM\Column (nullable : true)]
-    private ?DateTimeImmutable $invitationExpiredAt = null;
+    #[ORM\Column(nullable : true)]
+    private ?\DateTimeImmutable $invitationExpiredAt = null;
 
     public function __construct()
     {
         $this->medias = new ArrayCollection();
     }
 
-     public function getId(): ?int
+    public function getId(): ?int
     {
         return $this->id;
     }
@@ -96,12 +95,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getInvitationExpiredAt(): ?DateTimeImmutable
+    public function getInvitationExpiredAt(): ?\DateTimeImmutable
     {
         return $this->invitationExpiredAt;
     }
 
-     public function setInvitationExpiredAt(?DateTimeImmutable $invitationExpiredAt): static
+    public function setInvitationExpiredAt(?\DateTimeImmutable $invitationExpiredAt): static
     {
         $this->invitationExpiredAt = $invitationExpiredAt;
 
@@ -128,6 +127,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setName(?string $name): static
     {
         $this->name = $name;
+
         return $this;
     }
 
@@ -139,6 +139,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setDescription(?string $description): static
     {
         $this->description = $description;
+
         return $this;
     }
 
@@ -152,7 +153,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if (!$this->medias->contains($media)) {
             $this->medias->add($media);
-            $media->setUser($this); 
+            $media->setUser($this);
         }
 
         return $this;
@@ -161,9 +162,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function removeMedia(Media $media): static
     {
         if ($this->medias->removeElement($media)) {
-            if($media->getUser() === $this) {
-            $media->setUser(null);
-        }  
+            if ($media->getUser() === $this) {
+                $media->setUser(null);
+            }
         }
 
         return $this;
@@ -222,7 +223,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * Get the value of plainPassword
+     * Get the value of plainPassword.
      */
     public function getPlainPassword(): ?string
     {

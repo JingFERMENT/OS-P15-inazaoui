@@ -29,7 +29,4 @@ class UserMediaRelationTest extends TestCase
         $this->assertFalse($user->getMedias()->contains($media));
         $this->assertNull($media->getUser());
     }
-
-    
-
 }

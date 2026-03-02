@@ -9,7 +9,6 @@ use Symfony\Component\DomCrawler\Crawler;
 
 abstract class BaseWebTestCase extends WebTestCase
 {
-
     protected KernelBrowser $client;
 
     protected function setup(): void
@@ -25,7 +24,6 @@ abstract class BaseWebTestCase extends WebTestCase
 
     protected function loginAs(string $email): void
     {
-
         $repo = static::getContainer()->get(UserRepository::class);
         $user = $repo->findOneBy(['email' => $email]);
         self::assertNotNull($user, "Pas d'utilisateur: $email");

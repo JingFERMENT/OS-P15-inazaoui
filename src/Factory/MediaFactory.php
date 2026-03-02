@@ -35,22 +35,20 @@ final class MediaFactory extends PersistentObjectFactory
     #[\Override]
     protected function defaults(): array|callable
     {
-
-        return function() {
+        return function () {
             if (!isset(self::$pathIndex)) {
                 self::$pathIndex = 1;
             }
-            
-        $n = self::$pathIndex++;
-        return [
-            'path' => 'uploads/'. sprintf('%04d', $n). '.jpg',
-            'title' => self::faker()->words(4, true),
-            'user' => UserFactory::new(),
-            'album' => null,
-            ]; 
+
+            $n = self::$pathIndex++;
+
+            return [
+                'path' => 'uploads/'.sprintf('%04d', $n).'.jpg',
+                'title' => self::faker()->words(4, true),
+                'user' => UserFactory::new(),
+                'album' => null,
+            ];
         };
-        
-        
     }
 
     /**
@@ -60,6 +58,6 @@ final class MediaFactory extends PersistentObjectFactory
     protected function initialize(): static
     {
         return $this;
-            // ->afterInstantiate(function(Media $media): void {};
+        // ->afterInstantiate(function(Media $media): void {};
     }
 }
