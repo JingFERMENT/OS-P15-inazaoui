@@ -4,35 +4,33 @@ namespace App\Service;
 
 use App\Entity\User;
 use App\Security\InvitationTokenGeneratorInterface;
-use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
-
 class GuestInvitationService
 {
-
     public function __construct(
         private EntityManagerInterface $em,
         private MailerInterface $mailer,
         private UrlGeneratorInterface $urlGenerator,
-        private InvitationTokenGeneratorInterface $tokenGenerator
-    ) {}
+        private InvitationTokenGeneratorInterface $tokenGenerator,
+    ) {
+    }
+
     public function invite(User $guest, int $expiredDays = 2): string
     {
-
         // prepare the guest
         $guest->setRoles(['ROLE_USER']);
         $guest->setIsActive(false);
 
-        // generate token + expiration 
+        // generate token + expiration
         $invitationToken = $this->tokenGenerator->generate();
         $guest->setInvitationToken($invitationToken);
 
-        $guest->setInvitationExpiredAt(new DateTimeImmutable('+' . $expiredDays . ' days'));
+        $guest->setInvitationExpiredAt(new \DateTimeImmutable('+'.$expiredDays.' days'));
 
         $this->em->persist($guest);
         $this->em->flush();

@@ -3,7 +3,6 @@
 namespace App\Repository;
 
 use App\Entity\User;
-use DateTimeImmutable;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\DBAL\ParameterType;
 use Doctrine\Persistence\ManagerRegistry;
@@ -13,7 +12,6 @@ use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 
 /**
  * @extends ServiceEntityRepository<User>
- *
  */
 class UserRepository extends ServiceEntityRepository implements PasswordUpgraderInterface
 {
@@ -43,30 +41,29 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     {
         $conn = $this->getEntityManager()->getConnection();
 
-        $sql = "SELECT u.id,u.name,COUNT(m.id) AS mediaCount FROM \"user\" u
+        $sql = 'SELECT u.id,u.name,COUNT(m.id) AS mediaCount FROM "user" u
         LEFT JOIN media m ON m.user_id = u.id
         WHERE u.is_active = TRUE
         AND NOT (u.roles::jsonb @> :admin::jsonb)
         GROUP BY u.id, u.name
         ORDER BY u.id ASC
         LIMIT :limit 
-        OFFSET :offset";
+        OFFSET :offset';
 
         return $conn->fetchAllAssociative(
             $sql,
             [
-                'admin'  => '["ROLE_ADMIN"]',
-                'limit'  => $limit,
+                'admin' => '["ROLE_ADMIN"]',
+                'limit' => $limit,
                 'offset' => $offset,
             ],
             [
-                'admin'  => ParameterType::STRING,
-                'limit'  => ParameterType::INTEGER,
+                'admin' => ParameterType::STRING,
+                'limit' => ParameterType::INTEGER,
                 'offset' => ParameterType::INTEGER,
             ]
         );
     }
-
 
     /**
      * @return list<User>
@@ -90,8 +87,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         return $qb->getQuery()->getResult();
     }
 
-
-    public function findValidInvitation(string $token, DateTimeImmutable $now): ?User
+    public function findValidInvitation(string $token, \DateTimeImmutable $now): ?User
     {
         return $this->createQueryBuilder('u')
             ->andWhere('u.invitationToken = :token')

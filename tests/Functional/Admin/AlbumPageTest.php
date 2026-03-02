@@ -2,18 +2,18 @@
 
 namespace App\Tests\Functional\Admin;
 
-use Symfony\Component\HttpFoundation\Response;
 use App\Tests\BaseWebTestCase;
+use Symfony\Component\HttpFoundation\Response;
 
 class AlbumPageTest extends BaseWebTestCase
 {
-     public function testAlbumPageRequiresLogin(): void
+    public function testAlbumPageRequiresLogin(): void
     {
         $this->get('/admin/album');
-        $this->assertResponseRedirects('/login');  
+        $this->assertResponseRedirects('/login');
     }
 
-     public function testAlbumPageRequiresAdmin(): void
+    public function testAlbumPageRequiresAdmin(): void
     {
         $this->loginAs('activeGuest@test.com');
         $this->get('/admin/album');
@@ -27,12 +27,10 @@ class AlbumPageTest extends BaseWebTestCase
         $this->assertResponseIsSuccessful();
         $this->assertAnySelectorTextContains('a.nav-link', 'Invités');
         $this->assertAnySelectorTextContains('a.nav-link', 'Albums');
-        
     }
 
-    public function testAlbumPageCanAddAlbum():void
+    public function testAlbumPageCanAddAlbum(): void
     {
-
         $this->loginAs('ina@zaoui.com');
         $crawler = $this->get('/admin/album');
         $addLink = $crawler->filter('a.btn[href="/admin/album/add"]')->link();
@@ -50,12 +48,11 @@ class AlbumPageTest extends BaseWebTestCase
         $this->assertResponseIsSuccessful();
     }
 
-    public function testAlbumPageCanUpdateAlbum():void
+    public function testAlbumPageCanUpdateAlbum(): void
     {
-
         $this->loginAs('ina@zaoui.com');
         $crawler = $this->get('/admin/album');
-        
+
         $this->assertResponseIsSuccessful();
         $updateNodes = $crawler->filter('a.btn[href^="/admin/album/update/"]');
         $this->assertGreaterThan(0, $updateNodes->count(), "Pas d'album à modifier");
@@ -65,7 +62,7 @@ class AlbumPageTest extends BaseWebTestCase
         $crawler = $this->client->click($updateFirstlink);
 
         $this->assertSame($updateFirstHref, $this->client->getRequest()->getPathInfo());
-        
+
         $updatedAlbumName = 'New Ablum Name Test';
         $form = $crawler->selectButton('Modifier')->form(['album[name]' => $updatedAlbumName]);
         $this->client->submit($form);
@@ -75,9 +72,8 @@ class AlbumPageTest extends BaseWebTestCase
         $this->assertResponseIsSuccessful();
     }
 
-    public function testAlbumPageCanDeleteAlbum():void
+    public function testAlbumPageCanDeleteAlbum(): void
     {
-
         $this->loginAs('ina@zaoui.com');
         $crawler = $this->get('/admin/album');
         $this->assertResponseIsSuccessful();
@@ -86,9 +82,8 @@ class AlbumPageTest extends BaseWebTestCase
 
         $deleteFirstlink = $deleteNodes->first()->link();
         $this->client->click($deleteFirstlink);
-        $this->assertResponseRedirects('/admin/album'); 
+        $this->assertResponseRedirects('/admin/album');
         $this->client->followRedirect();
         $this->assertResponseIsSuccessful();
     }
-    
 }

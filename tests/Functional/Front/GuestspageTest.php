@@ -7,7 +7,6 @@ use App\Tests\BaseWebTestCase;
 
 final class GuestspageTest extends BaseWebTestCase
 {
-
     public function testGuestsPageListsGuestsWithDiscoverLinks(): void
     {
         // open guests list
@@ -39,7 +38,7 @@ final class GuestspageTest extends BaseWebTestCase
         $this->assertMatchesRegularExpression('#^/guest/\d+$#', $this->client->getRequest()->getPathInfo());
     }
 
-    public function testGuestPagesDoesNotShowBlockedGuests():void
+    public function testGuestPagesDoesNotShowBlockedGuests(): void
     {
         $this->loginAs('blockedGuest@test.com');
 

@@ -18,9 +18,9 @@ class MediaRepository extends ServiceEntityRepository
 
     /** @return list<Media> $result */
     public function findForActiveGuests(): array
-    { 
+    {
         $connection = $this->getEntityManager()->getConnection();
-        
+
         $ids = $connection->fetchFirstColumn(
             'SELECT m.id FROM media m
             INNER JOIN "user" u ON u.id = m.user_id 

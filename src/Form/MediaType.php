@@ -24,11 +24,11 @@ class MediaType extends AbstractType
                 'label' => 'Titre',
             ])
              ->add('album', EntityType::class, [
-                    'label' => 'Album',
-                    'required' => false,
-                    'class' => Album::class,
-                    'choice_label' => 'name',
-                ]);
+                 'label' => 'Album',
+                 'required' => false,
+                 'class' => Album::class,
+                 'choice_label' => 'name',
+             ]);
 
         if ($options['is_admin']) {
             $builder

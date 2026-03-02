@@ -2,8 +2,8 @@
 
 namespace App\Tests\Functional\Security;
 
-use PHPUnit\Framework\Attributes\DataProvider;
 use App\Tests\BaseWebTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class LoginTest extends BaseWebTestCase
 {

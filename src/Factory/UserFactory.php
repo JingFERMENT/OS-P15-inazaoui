@@ -12,6 +12,7 @@ use Zenstruck\Foundry\Persistence\PersistentObjectFactory;
 final class UserFactory extends PersistentObjectFactory
 {
     private static string $hashedPassword;
+
     /**
      * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#factories-as-services
      *
@@ -41,13 +42,14 @@ final class UserFactory extends PersistentObjectFactory
     protected function defaults(): array|callable
     {
         $firstname = self::faker()->firstName();
+
         return [
-            'name' => $firstname ,
+            'name' => $firstname,
             'email' => self::faker()->unique()->safeEmail(),
             'roles' => ['ROLE_GUEST'],
             'description' => self::faker()->optional()->sentence(),
             'isActive' => true,
-            'invitationToken'=> null,
+            'invitationToken' => null,
             'invitationExpiredAt' => null,
             'password' => self::$hashedPassword,
         ];

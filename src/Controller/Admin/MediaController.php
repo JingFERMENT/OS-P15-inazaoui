@@ -42,7 +42,7 @@ class MediaController extends AbstractController
             'medias' => $medias,
             'total' => $total,
             'page' => $page,
-            'limit' => $limit
+            'limit' => $limit,
         ]);
     }
 
@@ -64,8 +64,8 @@ class MediaController extends AbstractController
                 $media->setUser($user);
             }
 
-            $filename = md5(uniqid()) . '.' . $media->getFile()->guessExtension();
-            $media->setPath('uploads/' . $filename);
+            $filename = md5(uniqid()).'.'.$media->getFile()->guessExtension();
+            $media->setPath('uploads/'.$filename);
             $media->getFile()->move('public/uploads/', $filename);
             $em->persist($media);
             $em->flush();
@@ -79,8 +79,7 @@ class MediaController extends AbstractController
     #[Route('/admin/media/delete/{id}', name: 'admin_media_delete', methods: ['POST'])]
     public function delete(Media $media, Request $request, EntityManagerInterface $em): Response
     {
-
-        if (!$this->isCsrfTokenValid('media_delete_' . $media->getId(), (string) $request->request->get('_token'))) {
+        if (!$this->isCsrfTokenValid('media_delete_'.$media->getId(), (string) $request->request->get('_token'))) {
             throw $this->createAccessDeniedException();
         }
 

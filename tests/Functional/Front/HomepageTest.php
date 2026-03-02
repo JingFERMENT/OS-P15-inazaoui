@@ -6,8 +6,7 @@ use App\Tests\BaseWebTestCase;
 
 final class HomepageTest extends BaseWebTestCase
 {
-
-    public function testHomePageHasPublicNavAndDiscoverLinkRedirectToLoginPage():void
+    public function testHomePageHasPublicNavAndDiscoverLinkRedirectToLoginPage(): void
     {
         $crawler = $this->get('/');
         $this->assertResponseIsSuccessful();
@@ -21,15 +20,14 @@ final class HomepageTest extends BaseWebTestCase
         $this->assertSelectorExists('a:contains("découvrir")');
         // Dashboard should not be displayed
         $this->assertSelectorNotExists('nav a:contains("Dashboard")');
-  
-       $link = $crawler->filter('[data-test-id="discover-link"]')->link();
-      
+
+        $link = $crawler->filter('[data-test-id="discover-link"]')->link();
+
         $this->client->click($link);
         $this->assertResponseRedirects('/login');
-        
     }
 
-     public function testHomePageLoggedGuestHasDashboardLinkAndRedirectToDiscoverPage():void 
+    public function testHomePageLoggedGuestHasDashboardLinkAndRedirectToDiscoverPage(): void
     {
         $this->loginAs('activeGuest@test.com');
         $crawler = $this->get('/');
@@ -44,5 +42,4 @@ final class HomepageTest extends BaseWebTestCase
         $this->assertResponseIsSuccessful();
         $this->assertSame('/portfolio', $this->client->getRequest()->getPathInfo());
     }
-
 }

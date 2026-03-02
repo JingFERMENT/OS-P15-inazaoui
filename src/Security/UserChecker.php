@@ -21,7 +21,7 @@ final class UserChecker implements UserCheckerInterface
             return;
         }
 
-        if ($user->isActive() === false) {
+        if (false === $user->isActive()) {
             throw new CustomUserMessageAccountStatusException("Votre compte est bloqué ou non-activé. Veuillez contacter l'administrateur.");
         }
     }
