@@ -32,7 +32,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         minMessage: 'Le prénom doit avoir au moins {{ limit }} caractères.',
         maxMessage: 'Le prénom ne peut pas dépasser {{ limit }} caractères. '
     )]
-    private ?string $name = null;
+    private string $name = '';
 
     /**
      * @var list<string> The user roles
@@ -58,7 +58,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         max: 180,
         maxMessage: 'L’email ne peut pas dépasser {{ limit }} caractères.'
     )]
-    private ?string $email = null;
+    private string $email = '';
 
     /** @var Collection<int, Media> */
     #[ORM\OneToMany(targetEntity: Media::class, mappedBy: 'user', orphanRemoval: true)]
@@ -177,7 +177,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getUserIdentifier(): string
     {
-        return (string) $this->email;
+        return $this->email;
     }
 
     /**

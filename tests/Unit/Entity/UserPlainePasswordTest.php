@@ -3,6 +3,7 @@
 namespace App\Tests\Unit\Entity;
 
 use App\Entity\User;
+use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\TestCase;
 
 class UserPlainePasswordTest extends TestCase
@@ -13,6 +14,6 @@ class UserPlainePasswordTest extends TestCase
 
         $user->setPlainPassword('Password123@');
 
-        $this->assertSame('Password123@', $user->getPlainPassword());
+        Assert::assertSame('Password123@', $user->getPlainPassword());
     }
 }

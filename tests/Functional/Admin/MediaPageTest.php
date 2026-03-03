@@ -13,7 +13,7 @@ class MediaPageTest extends BaseWebTestCase
     public function testMediaPageRequiresLogin(): void
     {
         $this->get('/admin/media');
-        $this->assertResponseRedirects('/login');
+        self::assertResponseRedirects('/login');
     }
 
     public function testMediaPageIndexRendersAsAdmin(): void
@@ -21,10 +21,10 @@ class MediaPageTest extends BaseWebTestCase
         $this->loginAs('ina@zaoui.com');
         $crawler = $this->get('/admin/media');
 
-        $this->assertResponseIsSuccessful();
+        self::assertResponseIsSuccessful();
 
-        $this->assertAnySelectorTextContains('a.nav-link', 'Invités');
-        $this->assertAnySelectorTextContains('a.nav-link', 'Albums');
+        self::assertAnySelectorTextContains('a.nav-link', 'Invités');
+        self::assertAnySelectorTextContains('a.nav-link', 'Albums');
     }
 
     public function testMediaPageCanAddMediaAsAdmin(): void
@@ -42,8 +42,8 @@ class MediaPageTest extends BaseWebTestCase
         // add the media
         $addLink = $crawler->filter('a.btn[href="/admin/media/add"]')->link();
         $this->client->click($addLink);
-        $this->assertResponseIsSuccessful();
-        $this->assertSame('/admin/media/add', $this->client->getRequest()->getPathInfo());
+        self::assertResponseIsSuccessful();
+        self::assertSame('/admin/media/add', $this->client->getRequest()->getPathInfo());
 
         $fixtureImagePath = 'src/DataFixtures/imageFixtures/test.jpg';
 
@@ -62,9 +62,9 @@ class MediaPageTest extends BaseWebTestCase
             ]
         );
 
-        $this->assertResponseRedirects('/admin/media');
+        self::assertResponseRedirects('/admin/media');
         $this->client->followRedirect();
-        $this->assertResponseIsSuccessful();
+        self::assertResponseIsSuccessful();
     }
 
     public function testMediaPageIndexRendersAsActiveGuest(): void
@@ -72,11 +72,11 @@ class MediaPageTest extends BaseWebTestCase
         $this->loginAs('activeGuest@test.com');
 
         $this->get('/admin/media');
-        $this->assertResponseIsSuccessful();
+        self::assertResponseIsSuccessful();
 
         // no "invite" and "album" in the nav bar as guest
-        $this->assertAnySelectorTextNotContains('a.nav-link', 'Invités');
-        $this->assertAnySelectorTextNotContains('a.nav-link', 'Albums');
+        self::assertAnySelectorTextNotContains('a.nav-link', 'Invités');
+        self::assertAnySelectorTextNotContains('a.nav-link', 'Albums');
     }
 
     public function testMediaPageCanAddMediaAsActiveGuest(): void
@@ -87,8 +87,8 @@ class MediaPageTest extends BaseWebTestCase
 
         $addLink = $crawler->filter('a.btn[href="/admin/media/add"]')->link();
         $this->client->click($addLink);
-        $this->assertResponseIsSuccessful();
-        $this->assertSame('/admin/media/add', $this->client->getRequest()->getPathInfo());
+        self::assertResponseIsSuccessful();
+        self::assertSame('/admin/media/add', $this->client->getRequest()->getPathInfo());
 
         $fixtureImagePath = 'src/DataFixtures/imageFixtures/test.jpg';
 
@@ -106,9 +106,9 @@ class MediaPageTest extends BaseWebTestCase
             ]
         );
 
-        $this->assertResponseRedirects('/admin/media');
+        self::assertResponseRedirects('/admin/media');
         $this->client->followRedirect();
-        $this->assertResponseIsSuccessful();
+        self::assertResponseIsSuccessful();
     }
 
     public function testMediaPageCanDeleteMedia(): void
@@ -120,16 +120,16 @@ class MediaPageTest extends BaseWebTestCase
         $deleteFormNode = $crawler->filter('form[action^="/admin/media/delete/"]');
 
         $this->client->submit($deleteFormNode->form());
-        $this->assertResponseRedirects('/admin/media');
+        self::assertResponseRedirects('/admin/media');
         $this->client->followRedirect();
-        $this->assertResponseIsSuccessful();
+        self::assertResponseIsSuccessful();
     }
 
     public function testDeleteMediaWithInvalidCsrfReturns403(): void
     {
         $this->loginAs('ina@zaoui.com');
         $crawler = $this->get('/admin/media');
-        $this->assertResponseIsSuccessful();
+        self::assertResponseIsSuccessful();
 
         // delete the guest
         $firstDeleteFormNode = $crawler->filter('form[action^="/admin/media/delete/"]')->first();
@@ -140,6 +140,6 @@ class MediaPageTest extends BaseWebTestCase
             '_token' => 'invalid-token',
         ]);
 
-        $this->assertResponseStatusCodeSame(403);
+        self::assertResponseStatusCodeSame(403);
     }
 }

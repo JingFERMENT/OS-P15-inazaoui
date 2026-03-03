@@ -11,16 +11,16 @@ final class GuestspageTest extends BaseWebTestCase
     {
         // open guests list
         $crawler = $this->get('/guests');
-        $this->assertResponseIsSuccessful();
+        self::assertResponseIsSuccessful();
 
         // assert the page title
-        $this->assertSelectorTextContains('h3', 'Invités');
+        self::assertSelectorTextContains('h3', 'Invités');
 
-        $this->assertGreaterThan(0, $crawler->filter('.guests .guest')->count());
+        self::assertGreaterThan(0, $crawler->filter('.guests .guest')->count());
 
         // title (character + space + digital)
         $firstGuestTitle = trim($crawler->filter('.guests .guest h4')->first()->text());
-        $this->assertMatchesRegularExpression('/^.+\s\(\d+\)$/', $firstGuestTitle);
+        self::assertMatchesRegularExpression('/^.+\s\(\d+\)$/', $firstGuestTitle);
 
         $firstLink = $crawler
             ->filter('.guests .guest a:contains("découvrir")')
@@ -29,13 +29,13 @@ final class GuestspageTest extends BaseWebTestCase
 
         $firstHref = $firstLink->getUri();
 
-        $this->assertStringContainsString('/guest/', $firstHref);
+        self::assertStringContainsString('/guest/', $firstHref);
 
         // open the discover link
         $this->client->click($firstLink);
-        $this->assertResponseIsSuccessful();
+        self::assertResponseIsSuccessful();
 
-        $this->assertMatchesRegularExpression('#^/guest/\d+$#', $this->client->getRequest()->getPathInfo());
+        self::assertMatchesRegularExpression('#^/guest/\d+$#', $this->client->getRequest()->getPathInfo());
     }
 
     public function testGuestPagesDoesNotShowBlockedGuests(): void
@@ -48,10 +48,10 @@ final class GuestspageTest extends BaseWebTestCase
         $idOfBlockedGuest = $blockedGuest->getId();
 
         $crawler = $this->get('/guests');
-        $this->assertResponseIsSuccessful();
+        self::assertResponseIsSuccessful();
 
         $selector = sprintf('.guest .guest[data-guest-id="%d"]', $idOfBlockedGuest);
 
-        $this->assertCount(0, $crawler->filter($selector));
+        self::assertCount(0, $crawler->filter($selector));
     }
 }

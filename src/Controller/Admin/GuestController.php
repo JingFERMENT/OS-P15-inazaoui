@@ -122,7 +122,7 @@ final class GuestController extends AbstractController
         $now = $clock->now();
         $guest = $guestRepo->findValidInvitation($invitationToken, $now);
 
-        if (!$guest) {
+        if (null === $guest) {
             $this->addFlash('danger', 'Invitation invalide ou expirée.');
 
             return $this->redirectToRoute('home');

@@ -11,7 +11,7 @@ abstract class BaseWebTestCase extends WebTestCase
 {
     protected KernelBrowser $client;
 
-    protected function setup(): void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->client = static::createClient();
@@ -34,6 +34,6 @@ abstract class BaseWebTestCase extends WebTestCase
     protected function assertPageRequiresLogin(string $uri): void
     {
         $this->get($uri);
-        $this->assertResponseRedirects('/login');
+        self::assertResponseRedirects('/login');
     }
 }

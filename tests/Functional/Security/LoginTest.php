@@ -12,12 +12,12 @@ class LoginTest extends BaseWebTestCase
     {
         $this->get('/login');
 
-        $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('h1', 'Connexion');
-        $this->assertSelectorExists('form');
-        $this->assertSelectorExists('input[name="_csrf_token"]');
-        $this->assertSelectorExists('input[name="_username"]');
-        $this->assertSelectorExists('input[name="_password"]');
+        self::assertResponseIsSuccessful();
+        self::assertSelectorTextContains('h1', 'Connexion');
+        self::assertSelectorExists('form');
+        self::assertSelectorExists('input[name="_csrf_token"]');
+        self::assertSelectorExists('input[name="_username"]');
+        self::assertSelectorExists('input[name="_password"]');
     }
 
     // test wrong username and password and blocked guest
@@ -26,17 +26,17 @@ class LoginTest extends BaseWebTestCase
     {
         $this->get('/login');
 
-        $this->assertResponseIsSuccessful();
+        self::assertResponseIsSuccessful();
 
         $this->client->submitForm('Connexion', [
             '_username' => $username,
             '_password' => $password,
         ]);
 
-        $this->assertResponseRedirects('/login');
+        self::assertResponseRedirects('/login');
         $this->client->followRedirect();
 
-        $this->assertAnySelectorTextContains('.alert-danger', $expectedErrorContains);
+        self::assertAnySelectorTextContains('.alert-danger', $expectedErrorContains);
     }
 
     /**

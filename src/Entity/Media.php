@@ -17,11 +17,11 @@ class Media
 
     #[ORM\ManyToOne(inversedBy: 'medias')]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
-    private ?User $user = null;
+    private User $user;
 
     #[ORM\ManyToOne(targetEntity: Album::class)]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
-    private ?Album $album = null;
+    private Album $album;
 
     #[ORM\Column]
     private string $path;

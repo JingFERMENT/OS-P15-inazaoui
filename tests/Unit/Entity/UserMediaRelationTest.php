@@ -4,6 +4,7 @@ namespace App\Tests\Unit\Entity;
 
 use App\Entity\Media;
 use App\Entity\User;
+use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\TestCase;
 
 class UserMediaRelationTest extends TestCase
@@ -15,8 +16,8 @@ class UserMediaRelationTest extends TestCase
 
         $user->addMedia($media);
 
-        $this->assertTrue($user->getMedias()->contains($media));
-        $this->assertSame($user, $media->getUser());
+        Assert::assertTrue($user->getMedias()->contains($media));
+        Assert::assertSame($user, $media->getUser());
     }
 
     public function testRemoveMediaRemovesFromCollectionAndUnsetsOwningSide(): void
@@ -26,7 +27,7 @@ class UserMediaRelationTest extends TestCase
 
         $user->addMedia($media);
         $user->removeMedia($media);
-        $this->assertFalse($user->getMedias()->contains($media));
-        $this->assertNull($media->getUser());
+        Assert::assertFalse($user->getMedias()->contains($media));
+        Assert::assertNull($media->getUser());
     }
 }

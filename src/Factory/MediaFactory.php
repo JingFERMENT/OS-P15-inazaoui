@@ -12,15 +12,6 @@ final class MediaFactory extends PersistentObjectFactory
 {
     private static int $pathIndex;
 
-    /**
-     * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#factories-as-services
-     *
-     * @todo inject services if required
-     */
-    public function __construct()
-    {
-    }
-
     #[\Override]
     public static function class(): string
     {

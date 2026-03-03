@@ -10,16 +10,16 @@ class AboutPageTest extends BaseWebTestCase
     {
         $crawler = $this->get('/about');
 
-        $this->assertResponseIsSuccessful();
+        self::assertResponseIsSuccessful();
 
-        $this->assertSelectorTextContains('h2.about-title', 'Qui suis-je ?');
+        self::assertSelectorTextContains('h2.about-title', 'Qui suis-je ?');
 
-        $this->assertSelectorExists('img.about-img[alt="Ina Zaoui"]');
+        self::assertSelectorExists('img.about-img[alt="Ina Zaoui"]');
 
         $imgSrc = $crawler->filter('img.about-img')->attr('src');
 
-        $this->assertStringContainsString('/images/ina.png', $imgSrc);
+        self::assertStringContainsString('/images/ina.png', $imgSrc);
 
-        $this->assertSelectorTextContains('.about-description', "Chaque cliché d'Ina Zaoui est une ode à la beauté brute et à la fragilité de notre planète");
+        self::assertSelectorTextContains('.about-description', "Chaque cliché d'Ina Zaoui est une ode à la beauté brute et à la fragilité de notre planète");
     }
 }

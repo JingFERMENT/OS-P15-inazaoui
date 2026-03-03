@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Security\InvitationTokenGeneratorInterface;
 use App\Service\GuestInvitationService;
 use Doctrine\ORM\EntityManagerInterface;
+use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mailer\MailerInterface;
@@ -50,8 +51,8 @@ class GuestInvitationServiceTest extends TestCase
         $mailer
             ->expects($this->once())
             ->method('send')
-            ->with($this->callback(function ($email) {
-                $this->assertInstanceOf(TemplatedEmail::class, $email);
+            ->with(Assert::callback(function ($email) {
+                Assert::assertInstanceOf(TemplatedEmail::class, $email);
 
                 return true;
             }));
@@ -61,13 +62,13 @@ class GuestInvitationServiceTest extends TestCase
         $returnedToken = $service->invite($guest, expiredDays: 2);
 
         // Returned token
-        $this->assertSame('Password123@', $returnedToken);
+        Assert::assertSame('Password123@', $returnedToken);
 
         // User prepared
-        $this->assertSame(['ROLE_USER'], $guest->getRoles());
-        $this->assertFalse($guest->isActive());
-        $this->assertSame('Password123@', $guest->getInvitationToken());
+        Assert::assertSame(['ROLE_USER'], $guest->getRoles());
+        Assert::assertFalse($guest->isActive());
+        Assert::assertSame('Password123@', $guest->getInvitationToken());
 
-        $this->assertNotNull($guest->getInvitationExpiredAt());
+        Assert::assertNotNull($guest->getInvitationExpiredAt());
     }
 }

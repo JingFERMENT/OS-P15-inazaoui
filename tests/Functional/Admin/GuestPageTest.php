@@ -12,14 +12,14 @@ class GuestPageTest extends BaseWebTestCase
     public function testGuestPageRequiresLogin(): void
     {
         $this->get('/admin/guests');
-        $this->assertResponseRedirects('/login');
+        self::assertResponseRedirects('/login');
     }
 
     public function testGuestPageRequiresAdmin(): void
     {
         $this->loginAs('activeGuest@test.com');
         $this->get('/admin/guests');
-        $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
+        self::assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
     }
 
     public function testGuestPageIndexRenders(): void
@@ -27,10 +27,10 @@ class GuestPageTest extends BaseWebTestCase
         $this->loginAs('ina@zaoui.com');
 
         $this->get('/admin/guests');
-        $this->assertResponseIsSuccessful();
+        self::assertResponseIsSuccessful();
 
-        $this->assertAnySelectorTextContains('a.nav-link', 'Invités');
-        $this->assertAnySelectorTextContains('a.nav-link', 'Albums');
+        self::assertAnySelectorTextContains('a.nav-link', 'Invités');
+        self::assertAnySelectorTextContains('a.nav-link', 'Albums');
     }
 
     public function testGuestPageCanAddGuest(): void
@@ -40,8 +40,8 @@ class GuestPageTest extends BaseWebTestCase
 
         $addLink = $crawler->filter('a.btn[href="/admin/guest/add"]')->link();
         $crawler = $this->client->click($addLink);
-        $this->assertResponseIsSuccessful();
-        $this->assertSame('/admin/guest/add', $this->client->getRequest()->getPathInfo());
+        self::assertResponseIsSuccessful();
+        self::assertSame('/admin/guest/add', $this->client->getRequest()->getPathInfo());
 
         $email = 'guesttest@test.com';
         $name = 'guest test';
@@ -55,11 +55,11 @@ class GuestPageTest extends BaseWebTestCase
 
         $this->client->submit($form);
 
-        $this->assertResponseRedirects('/admin/guests');
+        self::assertResponseRedirects('/admin/guests');
         $this->client->followRedirect();
-        $this->assertResponseIsSuccessful();
+        self::assertResponseIsSuccessful();
 
-        $this->assertAnySelectorTextContains(
+        self::assertAnySelectorTextContains(
             '.alert-success',
             'Invité ajouté avec succès'
         );
@@ -70,43 +70,43 @@ class GuestPageTest extends BaseWebTestCase
         $this->loginAs('ina@zaoui.com');
         $crawler = $this->get('/admin/guests');
 
-        $this->assertResponseIsSuccessful();
+        self::assertResponseIsSuccessful();
         $blockFormNode = $crawler->filter('form[action^="/admin/guest/disable/"]');
-        $this->assertGreaterThan(0, $blockFormNode->count(), "Pas d'invité à bloquer");
+        self::assertGreaterThan(0, $blockFormNode->count(), "Pas d'invité à bloquer");
 
         $this->client->submit($blockFormNode->form());
-        $this->assertResponseRedirects('/admin/guests');
+        self::assertResponseRedirects('/admin/guests');
         $this->client->followRedirect();
-        $this->assertResponseIsSuccessful();
+        self::assertResponseIsSuccessful();
     }
 
     public function testGuestPageCanEnableGuest(): void
     {
         $this->loginAs('ina@zaoui.com');
         $crawler = $this->get('/admin/guests');
-        $this->assertResponseIsSuccessful();
+        self::assertResponseIsSuccessful();
 
         $unblockFormNode = $crawler->filter('form[action^="/admin/guest/enable/"]');
-        $this->assertGreaterThan(0, $unblockFormNode->count(), "Pas d'invité à débloquer");
+        self::assertGreaterThan(0, $unblockFormNode->count(), "Pas d'invité à débloquer");
 
         $this->client->submit($unblockFormNode->form());
-        $this->assertResponseRedirects('/admin/guests');
+        self::assertResponseRedirects('/admin/guests');
         $this->client->followRedirect();
-        $this->assertResponseIsSuccessful();
+        self::assertResponseIsSuccessful();
     }
 
     public function testGuestPageCanDeleteGuest(): void
     {
         $this->loginAs('ina@zaoui.com');
         $crawler = $this->get('/admin/guests');
-        $this->assertResponseIsSuccessful();
+        self::assertResponseIsSuccessful();
         $deleteFormNode = $crawler->filter('form[action^="/admin/guest/delete/"]');
-        $this->assertGreaterThan(0, $deleteFormNode->count(), "Pas d'invité à supprimer");
+        self::assertGreaterThan(0, $deleteFormNode->count(), "Pas d'invité à supprimer");
 
         $this->client->submit($deleteFormNode->form());
-        $this->assertResponseRedirects('/admin/guests');
+        self::assertResponseRedirects('/admin/guests');
         $this->client->followRedirect();
-        $this->assertResponseIsSuccessful();
+        self::assertResponseIsSuccessful();
     }
 
     public function testSetPasswordPageRendersAndActivateGuests(): void
@@ -127,26 +127,26 @@ class GuestPageTest extends BaseWebTestCase
         $em->flush();
 
         $this->get('/set-password/'.$token);
-        $this->assertResponseIsSuccessful();
-        $this->assertSelectorExists('form');
+        self::assertResponseIsSuccessful();
+        self::assertSelectorExists('form');
 
         $this->client->submitForm('Activer ton compte', [
             'set_password[plainPassword][first]' => 'Password123@',
             'set_password[plainPassword][second]' => 'Password123@',
         ]);
 
-        $this->assertResponseRedirects('/');
+        self::assertResponseRedirects('/');
         $this->client->followRedirect();
 
         $em->clear(); // reload from DB
 
         $reloaded = $em->getRepository(User::class)->findOneBy(['email' => 'test@test.com']);
 
-        $this->assertNotNull($reloaded);
+        self::assertNotNull($reloaded);
 
-        $this->assertTrue($reloaded->isActive());
-        $this->assertNull($reloaded->getInvitationExpiredAt());
-        $this->assertNull($reloaded->getInvitationToken());
+        self::assertTrue($reloaded->isActive());
+        self::assertNull($reloaded->getInvitationExpiredAt());
+        self::assertNull($reloaded->getInvitationToken());
     }
 
     public function testSetPasswordPageRedirectToHomePageWhenTokenIsInvalide(): void
@@ -154,11 +154,11 @@ class GuestPageTest extends BaseWebTestCase
         $fakeToken = str_repeat('a', 64);
         $this->get('/set-password/'.$fakeToken);
 
-        $this->assertResponseRedirects('/');
+        self::assertResponseRedirects('/');
         $this->client->followRedirect();
 
-        $this->assertSelectorExists('.alert-danger');
-        $this->assertSelectorTextContains('.alert-danger', 'Invitation invalide ou expirée.');
+        self::assertSelectorExists('.alert-danger');
+        self::assertSelectorTextContains('.alert-danger', 'Invitation invalide ou expirée.');
     }
 
     public function testDisableGuestWithInvalidCsrfReturns403(): void
@@ -166,7 +166,7 @@ class GuestPageTest extends BaseWebTestCase
         $this->loginAs('ina@zaoui.com');
 
         $crawler = $this->get('/admin/guests');
-        $this->assertResponseIsSuccessful();
+        self::assertResponseIsSuccessful();
 
         // disable the guest
         $firstBlockFormNode = $crawler->filter('form[action^="/admin/guest/disable/"]')->first();
@@ -177,7 +177,7 @@ class GuestPageTest extends BaseWebTestCase
             '_token' => 'invalid-token',
         ]);
 
-        $this->assertResponseStatusCodeSame(403);
+        self::assertResponseStatusCodeSame(403);
     }
 
     public function testEnableGuestWithInvalidCsrfReturns403(): void
@@ -185,7 +185,7 @@ class GuestPageTest extends BaseWebTestCase
         $this->loginAs('ina@zaoui.com');
 
         $crawler = $this->get('/admin/guests');
-        $this->assertResponseIsSuccessful();
+        self::assertResponseIsSuccessful();
 
         // enable the guest
         $firstEnableFormNode = $crawler->filter('form[action^="/admin/guest/enable/"]')->first();
@@ -196,7 +196,7 @@ class GuestPageTest extends BaseWebTestCase
             '_token' => 'invalid-token',
         ]);
 
-        $this->assertResponseStatusCodeSame(403);
+        self::assertResponseStatusCodeSame(403);
     }
 
     public function testDeleteGuestWithInvalidCsrfReturns403(): void
@@ -204,7 +204,7 @@ class GuestPageTest extends BaseWebTestCase
         $this->loginAs('ina@zaoui.com');
 
         $crawler = $this->get('/admin/guests');
-        $this->assertResponseIsSuccessful();
+        self::assertResponseIsSuccessful();
 
         // delete the guest
         $firstDeleteFormNode = $crawler->filter('form[action^="/admin/guest/delete/"]')->first();
@@ -215,6 +215,6 @@ class GuestPageTest extends BaseWebTestCase
             '_token' => 'invalid-token',
         ]);
 
-        $this->assertResponseStatusCodeSame(403);
+        self::assertResponseStatusCodeSame(403);
     }
 }

@@ -89,7 +89,7 @@ class HomeController extends AbstractController
     ): Response {
         $user = $security->getUser();
 
-        if (!$user) {
+        if (null === $user) {
             throw $this->createAccessDeniedException('Vous devez vous identifier.');
         }
 
