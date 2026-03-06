@@ -1,6 +1,7 @@
 # Optimization of a Photography Portfolio Website
+
 <p align="center">
-  <img src="docs/apercu_site.png" alt="aperçu du site" width="500">
+  <img src="docs/apercu_site.png" alt="aperçu du site" width="800">
 </p>
 
 ## Project description
@@ -140,15 +141,20 @@ vendor/bin/php-cs-fixer fix
 
 ## Performance improvements
 
+### RESULTS
 ### Guests page
 | Before | After |
-|-------|-------|
-| ![Avant](docs/Guests_page_performance_before.png) | ![Après](docs/Guests_page_performance_after.png) |
+|--------|-------|
+| <img src="docs/Guests_page_performance_before.png" alt="Before" width="600"> | <img src="docs/Guests_page_performance_after.png" alt="After" width="600"> |
 
 ## Improve the query
+
 ### Add CACHE
+
 ### Add Paginations 
+
 ### Minfiy the css file
+
 ### Compress the images from jpg to webp
 
 ## CONTRIBUTION 
