@@ -1,30 +1,3 @@
-# Optimization of a Photography Portfolio Website
-
-## Project description
-
-Ina Zaoui is a photography portfolio web application developed with Symfony. 
-
-The application provides:
-- a **front office** where visitors can explore the portfolio;
-- a **back office** where the administrator can manage albums, media, and guest accounts, and where **guest photographers** can manage their own media.
-
-## Improvements implemented
-
-This project focused on modernizing, securing, and improving the existing application.  
-The following enhancements have been implemented:
-
-- migrated the project from **Symfony 5.4** to **Symfony 7.4 (LTS)**
-- secured media uploads through file validation and safer authentication-related data handling
-- implemented **guest account management**, including email invitations and password setup
-- improved performance by reducing **N+1 queries**, compressing images, and minifying CSS files
-- strengthened code quality with **automated tests and static analysis tools**
-- provided clear **technical documentation** for future developers
-- set up a **continuous integration pipeline**.
-
----
-
-## Technical Stack
-
 <p>
   <img src="https://img.shields.io/badge/PHP-8.4-777BB4?style=flat-square&logo=php&logoColor=white" alt="PHP">
   <img src="https://img.shields.io/badge/Symfony-7.4-000000?style=flat-square&logo=symfony&logoColor=white" alt="Symfony">
@@ -35,15 +8,11 @@ The following enhancements have been implemented:
   <img src="https://img.shields.io/badge/GitHub%20Actions-CI-2088FF?style=flat-square&logo=githubactions&logoColor=white" alt="GitHub Actions">
 </p>
 
-### Development and Code Quality Tools
-
 <p>
   <img src="https://img.shields.io/badge/PHPUnit-Tests-6C3483?style=flat-square" alt="PHPUnit">
   <img src="https://img.shields.io/badge/PHPStan-Static%20Analysis-4B32C3?style=flat-square" alt="PHPStan">
   <img src="https://img.shields.io/badge/PHP%20CS%20Fixer-Code%20Style-8A2BE2?style=flat-square" alt="PHP CS Fixer">
 </p>
-
-### Key Dependencies
 
 <p>
   <img src="https://img.shields.io/badge/Symfony%20Mailer-Mailer-000000?style=flat-square&logo=symfony&logoColor=white" alt="Symfony Mailer">
@@ -53,6 +22,46 @@ The following enhancements have been implemented:
   <img src="https://img.shields.io/badge/DAMA%20Doctrine-Test%20Bundle-3F51B5?style=flat-square" alt="DAMA Doctrine Test Bundle">
   <img src="https://img.shields.io/badge/Doctrine%20Fixtures-Fixtures-FC6A31?style=flat-square&logo=doctrine&logoColor=white" alt="Doctrine Fixtures Bundle">
 </p>
+
+---
+
+# Optimization of a Photography Portfolio Website
+
+---
+
+<p align="center">
+  <img src="docs/coverage_report.png" alt="Coverage report" width="300">
+</p>
+
+## Project description
+
+Ina Zaoui is a photography portfolio web application developed with Symfony. 
+
+This application is divided into two main areas:
+
+### Front Office
+
+The public area of the website, where visitors can browse the portfolio and discover Ina Zaoui’s photography work.
+
+### Back Office / Admin
+
+The private area of the website, where authenticated users can manage content according to their role:
+
+- **Admin** can manage albums, all media, and guest accounts
+- **Guests** can manage only their own media
+
+### Improvements implemented
+
+This project focused on modernizing, securing, and improving the application.  
+
+The following enhancements have been implemented:
+ 1. migrated the project from **Symfony 5.4** to **Symfony 7.4 (LTS)**
+ 2. secured media uploads and authentication handling
+ 3. add **guest account management** with email invitations and password setup
+ 4. improved performance by fixing **N+1 queries**, compressing images, and minifying CSS files
+ 5. improved code quality with **automated tests and static analysis**
+ 6. wrote **technical documentation** for future developers
+ 7. set up a **continuous integration pipeline**.
 
 ---
 
@@ -101,14 +110,14 @@ php bin/console doctrine:database:create
 php bin/console doctrine:migrations:migrate
 ```
 
-### 6. Load fixtures
+### 6. Load fixtures(optional)
 ```bash
 php bin/console doctrine:fixtures:load
 ```
 
-## How to install and run the project
+## Usage
 
-Start the Symfony server
+### Start the Symfony server
 
 ```bash
 symfony server:start
@@ -118,44 +127,16 @@ Then open your browser and go to:
 http://127.0.0.1:8000
 
 
-## USAGE
-The application contains two main parts:
+### Run the tests
 
-### Front Office
-
-The front office is the public part of the website.
-Visitors can browse the portfolio pages and discover Ina Zaoui’s photography work.
-
-### Back Office / Admin
-
-The admin area allows authenticated users to manage content. It Depends on the role:
-
-- **Admin** can manage albums, all media, and guests,
-- **Guests** can only access and manage their own media.
-
-### Main features include:
-
-- viewing albums and media
-- uploading images
-- managing guest accounts
-- blocking or deleting guests
-- accessing guest pages. 
-
-### Tests
-The project requires a code coverage report above 70%.
-
-Run PHPUnit tests
+PHPUnit
 ```bash
 php bin/phpunit
 ```
 
-Run tests with coverage
+Run tests with coverage and open the coverage report
 ```bash
 php bin/phpunit --coverage-html var/coverage
-```
-
-After running this command, open the coverage report in:
-```bash
 open var/coverage/index.html
 ```
 
@@ -168,10 +149,13 @@ PHP CS Fixer:
 ```bash
 vendor/bin/php-cs-fixer fix
 ```
+
 ## PERFORMANCE IMPROVEMENTS
 
 ### Guests page
 ![Guests Page Before](docs/Guests_page_performance_before.png)
+![Guests Page Before](docs/Guests_page_performance_before.png)
+
 ## Improve the query
 ### Add CACHE
 ### Add Paginations 
