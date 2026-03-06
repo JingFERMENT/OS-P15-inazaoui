@@ -1,41 +1,11 @@
-<p>
-  <img src="https://img.shields.io/badge/PHP-8.4-777BB4?style=flat-square&logo=php&logoColor=white" alt="PHP">
-  <img src="https://img.shields.io/badge/Symfony-7.4-000000?style=flat-square&logo=symfony&logoColor=white" alt="Symfony">
-  <img src="https://img.shields.io/badge/PostgreSQL-16-336791?style=flat-square&logo=postgresql&logoColor=white" alt="PostgreSQL">
-  <img src="https://img.shields.io/badge/Doctrine-ORM%203.x-FC6A31?style=flat-square&logo=doctrine&logoColor=white" alt="Doctrine ORM">
-  <img src="https://img.shields.io/badge/Twig-3.x-85EA2D?style=flat-square&logo=twig&logoColor=black" alt="Twig">
-  <img src="https://img.shields.io/badge/Docker-Containerized-2496ED?style=flat-square&logo=docker&logoColor=white" alt="Docker">
-  <img src="https://img.shields.io/badge/GitHub%20Actions-CI-2088FF?style=flat-square&logo=githubactions&logoColor=white" alt="GitHub Actions">
-</p>
-
-<p>
-  <img src="https://img.shields.io/badge/PHPUnit-Tests-6C3483?style=flat-square" alt="PHPUnit">
-  <img src="https://img.shields.io/badge/PHPStan-Static%20Analysis-4B32C3?style=flat-square" alt="PHPStan">
-  <img src="https://img.shields.io/badge/PHP%20CS%20Fixer-Code%20Style-8A2BE2?style=flat-square" alt="PHP CS Fixer">
-</p>
-
-<p>
-  <img src="https://img.shields.io/badge/Symfony%20Mailer-Mailer-000000?style=flat-square&logo=symfony&logoColor=white" alt="Symfony Mailer">
-  <img src="https://img.shields.io/badge/LiipImagineBundle-Images-4CAF50?style=flat-square" alt="LiipImagineBundle">
-  <img src="https://img.shields.io/badge/SensioLabs%20Minify-Minify-FF9800?style=flat-square" alt="SensioLabs Minify Bundle">
-  <img src="https://img.shields.io/badge/Zenstruck%20Foundry-Foundry-009688?style=flat-square" alt="Zenstruck Foundry">
-  <img src="https://img.shields.io/badge/DAMA%20Doctrine-Test%20Bundle-3F51B5?style=flat-square" alt="DAMA Doctrine Test Bundle">
-  <img src="https://img.shields.io/badge/Doctrine%20Fixtures-Fixtures-FC6A31?style=flat-square&logo=doctrine&logoColor=white" alt="Doctrine Fixtures Bundle">
-</p>
-
----
-
 # Optimization of a Photography Portfolio Website
-
----
-
-<p align="center">
-  <img src="docs/coverage_report.png" alt="Coverage report" width="300">
-</p>
 
 ## Project description
 
 Ina Zaoui is a photography portfolio web application developed with Symfony. 
+<p align="center">
+  <img src="docs/apercu_site" alt="aperçu du site" width="500">
+</p>
 
 This application is divided into two main areas:
 
@@ -43,7 +13,7 @@ This application is divided into two main areas:
 
 The public area of the website, where visitors can browse the portfolio and discover Ina Zaoui’s photography work.
 
-### Back Office / Admin
+### Back Office
 
 The private area of the website, where authenticated users can manage content according to their role:
 
@@ -62,6 +32,26 @@ The following enhancements have been implemented:
  5. improved code quality with **automated tests and static analysis**
  6. wrote **technical documentation** for future developers
  7. set up a **continuous integration pipeline**.
+
+---
+
+## Technical Stack
+
+![PHP](https://img.shields.io/badge/PHP-8.4-777BB4?style=flat-square&logo=php&logoColor=white)
+![Symfony](https://img.shields.io/badge/Symfony-7.4-000000?style=flat-square&logo=symfony&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-336791?style=flat-square&logo=postgresql&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat-square&logo=docker&logoColor=white)
+![PHPUnit](https://img.shields.io/badge/Tests-PHPUnit-6C3483?style=flat-square)
+![CI](https://img.shields.io/badge/CI-GitHub_Actions-2088FF?style=flat-square&logo=githubactions&logoColor=white)
+
+## Key Dependencies
+
+- Symfony Mailer
+- LiipImagineBundle
+- SensioLabs Minify Bundle
+- Zenstruck Foundry
+- DAMA Doctrine Test Bundle
+- Doctrine Fixtures Bundle
 
 ---
 
