@@ -8,9 +8,7 @@ use App\Entity\User;
 use App\Repository\AlbumRepository;
 use App\Repository\MediaRepository;
 use App\Repository\UserRepository;
-use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -51,11 +49,8 @@ class HomeController extends AbstractController
     }
 
     #[Route('/guest/{id}', name: 'guest', requirements: ['id' => '\d+'])]
-    public function guest(
-        #[MapEntity(id: 'id')] User $guest,
-        Request $request,
-        MediaRepository $mediaRepository,
-    ): Response {
+    public function guest(User $guest, Request $request, MediaRepository $mediaRepository): Response
+    {
         $page = $request->query->getInt('page', 1);
         $limit = 6;
         $offset = $limit * ($page - 1);
@@ -83,16 +78,9 @@ class HomeController extends AbstractController
     public function portfolio(
         AlbumRepository $albumsRepo,
         MediaRepository $mediasRepo,
-        Security $security,
         CacheInterface $cache,
-        #[MapEntity(id: 'id')] ?Album $album = null,
+        ?Album $album = null,
     ): Response {
-        $user = $security->getUser();
-
-        if (null === $user) {
-            throw $this->createAccessDeniedException('Vous devez vous identifier.');
-        }
-
         $albums = $cache->get('portfolio_albums', function (ItemInterface $item) use ($albumsRepo) {
             $item->expiresAfter(3600);
 
@@ -100,9 +88,8 @@ class HomeController extends AbstractController
         });
 
         $albumId = $album?->getId() ?? 0;
-        $userId = method_exists($user, 'getId') ? $user->getId() : 0;
 
-        $cacheKey = sprintf('portfolio_medias_user_%s_album_%s', $userId, $albumId);
+        $cacheKey = sprintf('portfolio_medias_album_%s', $albumId);
 
         /** @var list<Media> $medias */
         $medias = $cache->get($cacheKey, function (ItemInterface $item) use ($mediasRepo, $album) {

@@ -6,7 +6,7 @@ use App\Tests\BaseWebTestCase;
 
 final class HomepageTest extends BaseWebTestCase
 {
-    public function testHomePageHasPublicNavAndDiscoverLinkRedirectToLoginPage(): void
+    public function testHomePageHasPublicNavAndDiscoverLinkRedirectToPortfolioPage(): void
     {
         $crawler = $this->get('/');
         self::assertResponseIsSuccessful();
@@ -24,7 +24,7 @@ final class HomepageTest extends BaseWebTestCase
         $link = $crawler->filter('[data-test-id="discover-link"]')->link();
 
         $this->client->click($link);
-        self::assertResponseRedirects('/login');
+        self::assertSame('/portfolio', $this->client->getRequest()->getPathInfo());
     }
 
     public function testHomePageLoggedGuestHasDashboardLinkAndRedirectToDiscoverPage(): void

@@ -9,11 +9,6 @@ use Symfony\Component\DomCrawler\Crawler;
 
 final class PortfolioPageTest extends BaseWebTestCase
 {
-    public function testPortfolioRequiresLogin(): void
-    {
-        $this->assertPageRequiresLogin('/portfolio');
-    }
-
     public function testPortfolioPageRendersAlbumsAndMediaWhenLoggedIn(): void
     {
         $this->loginAs('activeGuest@test.com');
