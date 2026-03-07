@@ -1,37 +1,29 @@
-# Optimization of a Photography Portfolio Website
-
-<p align="center">
-  <img src="docs/apercu_site.png" alt="aperçu du site" width="800">
-</p>
+# Optimization of a photography portfolio website
 
 ## Project description
 
-Ina Zaoui is a photography portfolio web application developed with Symfony. 
+Ina Zaoui is a photography portfolio web application developed with Symfony. It is divided into two main areas:
 
-This application is divided into two main areas:
+#### Front Office
 
-### Front Office
+The public area of the website, where visitors can browse the portfolio and discover differents photographs' work.
 
-The public area of the website, where visitors can browse the portfolio and discover Ina Zaoui’s photography work.
-
-### Back Office
+#### Back Office
 
 The private area of the website, where authenticated users can manage content according to their role:
 
 - **Admin** can manage albums, all media, and guest accounts
 - **Guests** can manage only their own media
 
-### Improvements implemented
+## Improvements implemented
 
  1. migrated the project from **Symfony 5.4** to **Symfony 7.4 (LTS)**
  2. secured media uploads and authentication handling
  3. add **guest account management** with email invitations and password setup
- 4. improved performance by fixing **N+1 queries**, compressing images, and minifying CSS files
+ 4. improved performance by fixing **N+1 queries**, compressing images, and minifying files.
  5. improved code quality with **automated tests and static analysis**
  6. wrote **technical documentation** for future developers
  7. set up a **continuous integration pipeline**.
-
----
 
 ## Technical Stack
 
@@ -51,16 +43,12 @@ The private area of the website, where authenticated users can manage content ac
 - DAMA Doctrine Test Bundle
 - Doctrine Fixtures Bundle
 
----
-
 ## Prerequisites
 
 - PHP : 8.2+
 - Composer
 - Symfony CLI
 - PostgreSQL: 16+
-
----
 
 ## Installation
 
@@ -117,47 +105,51 @@ http://127.0.0.1:8000
 
 ### Run the tests
 
-PHPUnit
+Run the tests with PHPUnit
 ```bash
 php bin/phpunit
 ```
 
-Run tests with coverage and open the report
+Generate the coverage report
 ```bash
 php bin/phpunit --coverage-html var/coverage
 open var/coverage/index.html
 ```
+Test coverage reaches 81.5%, exceeding the required 70%.
+The tests are mainly focused on controllers and repositories, with mostly functional tests and a few unit tests for services.
+
+See the full report here: [Coverage Report](docs/coverage-report.pdf)
 
 ### Run quality commands
 
-PHPStan:
+PHPStan (code quality and type safety)
 ```bash
 vendor/bin/phpstan analyse
 ```
-PHP CS Fixer:
+PHP CS Fixer (code style and formatting)
 ```bash
 vendor/bin/php-cs-fixer fix
 ```
 
-## Performance improvements
+## Performance optimization
 
-### RESULTS
-### Guests page
-| Before | After |
-|--------|-------|
-| <img src="docs/Guests_page_performance_before.png" alt="Before" width="600"> | <img src="docs/Guests_page_performance_after.png" alt="After" width="600"> |
+This project includes several performance improvements to reduce loading time, optimize database access and optimize the user experience.
 
-## Improve the query
+#### Main optimization areas
+- Database query optimization to reduce the N+1 query issue
+- Controller caching to improve loading time on repeated visits
+- Pagination to limit the number of large photos loaded at once
+- CSS and JavaScript minification
+- Image compression and optimized loading strategies
 
-### Add CACHE
+For more details, see the full report here: [Performance Report](docs/performance-report.pdf)
 
-### Add Paginations 
-
-### Minfiy the css file
-
-### Compress the images from jpg to webp
+#### Tools chosen: 
+- Symfony Profiler 
+- LightHouse
+- LiipImagineBundle
+- SensioLabs Minify Bundle
 
 ## CONTRIBUTION 
 To contribute to this project, please read [CONTRIBUTING.md](CONTRIBUTING.md).
-
 
