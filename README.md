@@ -1,46 +1,118 @@
-# Optimization of a Photography Portfolio Website
+# Optimization of Ina Zaoui's Photography Portfolio Website
+
+A Symfony-based photography portfolio application optimized for performance, security, and maintainability.
+
+---
 
 <p align="center">
-  <img src="docs/apercu_site.png" alt="aperçu du site" width="800">
+
+![PHP](https://img.shields.io/badge/PHP-8.4-777BB4?style=flat-square&logo=php&logoColor=white)
+![Symfony](https://img.shields.io/badge/Symfony-7.4-000000?style=flat-square&logo=symfony&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-336791?style=flat-square&logo=postgresql&logoColor=white)
+![Tests](https://img.shields.io/badge/tests-PHPUnit-green)
+![CI](https://img.shields.io/badge/CI-GitHub_Actions-blue)
+
 </p>
 
-## Project description
+## Table of Contents
 
-Ina Zaoui is a photography portfolio web application developed with Symfony. 
+- [Project Context](#project-context)
+- [Project Description](#project-description)
+- [Main Features](#main-features)
+- [Improvements Implemented](#improvements-implemented)
+- [Technical stack](#technical-stack)
+- [Prerequisites](#prerequisites)
+- [Key Dependencies](#key-dependencies)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Performance Optimization](#performance-optimization)
+- [Technical Documentation](#technical-documentation)
+- [Contributing](#contributing)
+- [Credits](#credits)
 
-This application is divided into two main areas:
+---
 
-### Front Office
+## Project Context
 
-The public area of the website, where visitors can browse the portfolio and discover Ina Zaoui’s photography work.
+This project was carried out as part of an OpenClassrooms training project.
 
-### Back Office
+The objective was not only to improve and secure the application, but also to prepare a proper handover for the next developer. 
 
-The private area of the website, where authenticated users can manage content according to their role:
+---
 
-- **Admin** can manage albums, all media, and guest accounts
-- **Guests** can manage only their own media
+## Project Description
 
-### Improvements implemented
+Ina Zaoui is a photography portfolio web application developed with Symfony.
 
- 1. migrated the project from **Symfony 5.4** to **Symfony 7.4 (LTS)**
- 2. secured media uploads and authentication handling
- 3. add **guest account management** with email invitations and password setup
- 4. improved performance by fixing **N+1 queries**, compressing images, and minifying CSS files
- 5. improved code quality with **automated tests and static analysis**
- 6. wrote **technical documentation** for future developers
- 7. set up a **continuous integration pipeline**.
+It includes a public front office for visitors and a secured back office for authenticated users.  
+The application allows an administrator to manage albums, media, and guest accounts, while guest users can manage only their own media.
+
+---
+
+## Main Features
+
+- Public portfolio browsing
+- Album management
+- Media management
+- Guest account creation and administration
+- Guest authentication
+- Role-based access control
+- Secure media upload handling
+
+---
+
+## Improvements Implemented
+
+- [x] Migrated the project from **Symfony 5.4 to Symfony 7.4 (LTS)**
+- [x] Secured **media uploads and authentication handling**
+- [x] Added **guest account management** with email invitations and password setup
+- [x] Improved performance by **removing N+1 queries, compressing images, and minifying assets**
+- [x] Improved code quality with **automated tests and static analysis**
+- [x] Wrote **documentations** for future developers
+- [x] Set up a **continuous integration pipeline**
 
 ---
 
 ## Technical Stack
 
-![PHP](https://img.shields.io/badge/PHP-8.4-777BB4?style=flat-square&logo=php&logoColor=white)
-![Symfony](https://img.shields.io/badge/Symfony-7.4-000000?style=flat-square&logo=symfony&logoColor=white)
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-336791?style=flat-square&logo=postgresql&logoColor=white)
-![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat-square&logo=docker&logoColor=white)
-![PHPUnit](https://img.shields.io/badge/Tests-PHPUnit-6C3483?style=flat-square)
-![CI](https://img.shields.io/badge/CI-GitHub_Actions-2088FF?style=flat-square&logo=githubactions&logoColor=white)
+### Core Stack
+- Framework: Symfony 7.4
+- Language: PHP 8.4
+- Database: PostgreSQL 16
+- ORM: Doctrine ORM 3.x
+- Templating Engine: Twig 3.x
+
+### Development and Quality Tools
+- Testing: PHPUnit
+- Static Analysis: PHPStan
+- Coding Standards: PHP CS Fixer
+
+### Performance and Media Optimization
+- Image Optimization: LiipImagineBundle
+- Asset Minification: SensioLabs Minify Bundle
+
+### Testing Utilities
+- Test Data / Fixtures: Zenstruck Foundry, Doctrine Fixtures Bundle
+- Database Test Isolation: DAMA Doctrine Test Bundle
+
+### Automation
+- Continuous Integration: GitHub Actions
+
+## Prerequisites
+
+Before installing and running this project, make sure you have:
+- PHP : 8.2+
+- Composer
+- Symfony CLI
+- PostgreSQL: 16+
+
+Recommended tools:
+- Docker
+- PHPUnit
+- PHPStan
+- PHP CS Fixer
+
+---
 
 ## Key Dependencies
 
@@ -50,15 +122,6 @@ The private area of the website, where authenticated users can manage content ac
 - Zenstruck Foundry
 - DAMA Doctrine Test Bundle
 - Doctrine Fixtures Bundle
-
----
-
-## Prerequisites
-
-- PHP : 8.2+
-- Composer
-- Symfony CLI
-- PostgreSQL: 16+
 
 ---
 
@@ -73,7 +136,7 @@ cd OC-P15-inazaoui
 
 ### 2. Install dependencies
 ```bash
-compose install 
+composer install 
 ```
 
 ### 3. Configure environment variables
@@ -117,47 +180,58 @@ http://127.0.0.1:8000
 
 ### Run the tests
 
-PHPUnit
+Run the tests with PHPUnit
 ```bash
 php bin/phpunit
 ```
 
-Run tests with coverage and open the report
+### Generate the coverage report
 ```bash
 php bin/phpunit --coverage-html var/coverage
 open var/coverage/index.html
 ```
 
-### Run quality commands
+**Test coverage** reaches **81.5%**, exceeding the required 70%.
+See the full report here: [Coverage Report](public/coverage-report.html)
 
-PHPStan:
+### Run code quality checks
+
+Run static analysis:
+
 ```bash
 vendor/bin/phpstan analyse
 ```
-PHP CS Fixer:
+Run coding standards checks:
+
 ```bash
 vendor/bin/php-cs-fixer fix
 ```
 
-## Performance improvements
+## Performance Optimization
 
-### RESULTS
-### Guests page
-| Before | After |
-|--------|-------|
-| <img src="docs/Guests_page_performance_before.png" alt="Before" width="600"> | <img src="docs/Guests_page_performance_after.png" alt="After" width="600"> |
+Main optimization areas:
 
-## Improve the query
+- **Database query optimization** to reduce N+1 query issues
+- **Caching** to improve response time for frequently accessed pages
+- **Pagination** to limit the number of large images loaded at once
+- **Image optimization** using LiipImagineBundle
+- **CSS and asset minification** using SensioLabs Minify Bundle
 
-### Add CACHE
+These improvements help reduce server workload and improve page loading speed.
 
-### Add Paginations 
+For detailed analysis and measurements, see the full report:  
+[Performance Report](Technical-documentation.md)
 
-### Minfiy the css file
+## Technical Documentation
 
-### Compress the images from jpg to webp
+For a more detailed explanation of the application structure, entities, main flows, and implementation choices, see:[Technical Documentation](Technical-documentation.md)
 
-## CONTRIBUTION 
+## Contributing
+
 To contribute to this project, please read [CONTRIBUTING.md](CONTRIBUTING.md).
 
+## Credits
 
+- Original project: OpenClassrooms Student Center
+- Portfolio project: Ina Zaoui
+- Development, optimization, testing, and documentation: Jing Zhang Ferment
