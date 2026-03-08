@@ -220,11 +220,11 @@ Main optimization areas:
 These improvements help reduce server workload and improve page loading speed.
 
 For detailed analysis and measurements, see the full report:  
-[Performance Report](docs/performance-report.pdf)
+[Performance Report](Technical-documentation.md)
 
 ## Technical Documentation
 
-For a more detailed explanation of the application structure, entities, main flows, and implementation choices, see:[Technical Documentation](technical-documentation.md)
+For a more detailed explanation of the application structure, entities, main flows, and implementation choices, see:[Technical Documentation](Technical-documentation.md)
 
 ## Contributing
 
