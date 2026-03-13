@@ -36,7 +36,7 @@ class AppFixtures extends Fixture
         ]);
 
         // random active guests
-        $randomActiveGuests = UserFactory::createMany(50, [
+        $randomActiveGuests = UserFactory::createMany(8, [
             'roles' => ['ROLE_GUEST'],
             'isActive' => true,
         ]);
@@ -63,7 +63,7 @@ class AppFixtures extends Fixture
         ]);
 
         // each media has a user, but 50% times has an album
-        MediaFactory::createMany(100, function () use ($allGuests, $albums) {
+        MediaFactory::createMany(20, function () use ($allGuests, $albums) {
             return [
                 'user' => $allGuests[array_rand($allGuests)],
                 'album' => $albums[array_rand($albums)],
