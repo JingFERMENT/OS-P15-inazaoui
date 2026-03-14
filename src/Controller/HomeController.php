@@ -26,8 +26,6 @@ class HomeController extends AbstractController
     #[Route('/guests', name: 'guests')]
     public function guests(Request $request, UserRepository $userRepository, CacheInterface $cache): Response
     {
-        $criteria = [];
-
         $page = $request->query->getInt('page', 1);
         $limit = 6;
         $offset = $limit * ($page - 1);
@@ -40,7 +38,7 @@ class HomeController extends AbstractController
             return $userRepository->findForActiveGuestsWithMediaCount($limit, $offset);
         });
 
-        $total = $userRepository->count($criteria);
+        $total = $userRepository->countActiveGuests();
 
         return $this->render('front/guests.html.twig', [
             'guests' => $guests,
@@ -50,7 +48,7 @@ class HomeController extends AbstractController
         ]);
     }
 
-    #[Route('/guest/{id}', name: 'guest', requirements: ['id' => '\d+'])]
+    #[Route('/guest/{id:guest}', name: 'guest', requirements: ['id' => '\d+'])]
     public function guest(User $guest, Request $request, MediaRepository $mediaRepository, CacheInterface $cache): Response
     {
         $page = $request->query->getInt('page', 1);
@@ -75,14 +73,14 @@ class HomeController extends AbstractController
 
         return $this->render('front/guest.html.twig', [
             'guest' => $guest,
-            'media' => $medias,
+            'medias' => $medias,
             'total' => $total,
             'limit' => $limit,
             'page' => $page,
         ]);
     }
 
-    #[Route('/portfolio/{id}', name: 'portfolio', defaults: ['id' => null], requirements: ['id' => '\d+'])]
+    #[Route('/portfolio/{id:album}', name: 'portfolio', defaults: ['id' => null], requirements: ['id' => '\d+'])]
     public function portfolio(
         AlbumRepository $albumsRepo,
         MediaRepository $mediasRepo,
@@ -97,11 +95,11 @@ class HomeController extends AbstractController
 
         $albumId = $album?->getId() ?? 0;
 
-        $cacheKey = sprintf('portfolio_medias_album_%s', $albumId);
+        $cacheKey = sprintf('portfolio_medias_album_%d', $albumId);
 
         /** @var list<Media> $medias */
         $medias = $cache->get($cacheKey, function (ItemInterface $item) use ($mediasRepo, $album) {
-            $item->expiresAfter(300); // 5 mins
+            $item->expiresAfter(3600); // 1 heure
 
             if (null !== $album) {
                 return $mediasRepo->findBy(['album' => $album], ['id' => 'ASC']);

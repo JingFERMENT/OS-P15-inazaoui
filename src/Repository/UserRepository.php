@@ -87,6 +87,19 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         return $qb->getQuery()->getResult();
     }
 
+
+    public function countActiveGuests()
+    {
+        $connection = $this->getEntityManager()->getConnection();
+
+        return (int) $connection->fetchOne(
+            'SELECT COUNT(id) FROM "user" u 
+            WHERE u.is_active = TRUE
+            AND NOT (u.roles::jsonb @> :admin::jsonb)',
+            ['admin' => '["ROLE_ADMIN"]']
+        );
+    }
+
     public function findValidInvitation(string $token, \DateTimeImmutable $now): ?User
     {
         return $this->createQueryBuilder('u')
