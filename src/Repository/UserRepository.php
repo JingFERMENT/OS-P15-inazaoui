@@ -87,7 +87,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         return $qb->getQuery()->getResult();
     }
 
-    public function countActiveGuests()
+    public function countActiveGuests(): int
     {
         $connection = $this->getEntityManager()->getConnection();
 
