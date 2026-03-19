@@ -86,7 +86,7 @@ class MediaController extends AbstractController
 
         $filePath = $media->getPath();
         $fullPath = $this->getParameter('kernel.project_dir').'/public/'.$filePath;
-        
+
         if (is_file($fullPath)) {
             unlink($fullPath);
         }
