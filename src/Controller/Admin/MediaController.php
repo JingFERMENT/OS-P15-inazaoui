@@ -84,13 +84,15 @@ class MediaController extends AbstractController
             throw $this->createAccessDeniedException();
         }
 
-        $em->remove($media);
-
-        $em->flush();
-
-        if (is_file($media->getPath())) {
-            unlink($media->getPath());
+        $filePath = $media->getPath();
+        $fullPath = $this->getParameter('kernel.project_dir').'/public/'.$filePath;
+        
+        if (is_file($fullPath)) {
+            unlink($fullPath);
         }
+
+        $em->remove($media);
+        $em->flush();
 
         return $this->redirectToRoute('admin_media_index');
     }
