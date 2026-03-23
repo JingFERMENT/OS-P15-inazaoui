@@ -65,8 +65,9 @@ class MediaController extends AbstractController
             }
 
             $filename = md5(uniqid()).'.'.$media->getFile()->guessExtension();
-            $media->setPath('public/uploads/'.$filename);
-            $media->getFile()->move('public/uploads/', $filename);
+            $media->setPath('/uploads/'.$filename);
+            $media->getFile()->move(
+                $this->getParameter('kernel.project_dir').'/public/uploads', $filename);
             $em->persist($media);
             $em->flush();
 
@@ -83,13 +84,15 @@ class MediaController extends AbstractController
             throw $this->createAccessDeniedException();
         }
 
-        $em->remove($media);
+        $filePath = $media->getPath();
+        $fullPath = $this->getParameter('kernel.project_dir').'/public/'.$filePath;
 
-        $em->flush();
-
-        if (is_file($media->getPath())) {
-            unlink($media->getPath());
+        if (is_file($fullPath)) {
+            unlink($fullPath);
         }
+
+        $em->remove($media);
+        $em->flush();
 
         return $this->redirectToRoute('admin_media_index');
     }
