@@ -25,6 +25,7 @@ A Symfony-based photography portfolio application optimized for performance, sec
 - [Key Dependencies](#key-dependencies)
 - [Installation](#installation)
 - [Usage](#usage)
+- [Deployment](#deployment)
 - [Performance Optimization](#performance-optimization)
 - [Technical Documentation](#technical-documentation)
 - [Contributing](#contributing)
@@ -141,7 +142,7 @@ composer install
 
 ### 3. Docker (optional)
 ```bash
-docker compose up -d
+docker compose up -d --build
 ```
 
 ### 4. Configure environment variables
@@ -158,7 +159,7 @@ MAILER_DSN=null://null
 
 ### 5. Supprimer la base de données
 ```bash
-symfony console doctrine:database:drop --force --if-exists
+php bin/console doctrine:database:drop --force --if-exists
 ```
 
 ### 6. Create the database
@@ -176,12 +177,23 @@ php bin/console doctrine:migrations:migrate
 php bin/console doctrine:fixtures:load
 ```
 
+*Note : Vous pouvez exécuter ces commandes avec l'option --env=test pour les exécuter dans l'environnement de test.*
+
 ## Usage
 
 ### Start the Symfony server
 
 ```bash
 symfony server:start
+```
+
+Then open your browser and go to:
+http://127.0.0.1:8000
+
+### Start docker (optional)
+
+```bash
+docker compose up -d
 ```
 
 Then open your browser and go to:
@@ -216,6 +228,14 @@ Run coding standards checks:
 ```bash
 vendor/bin/php-cs-fixer fix
 ```
+*Note : Penser à charger les fixtures avant chaque éxécution des tests.*
+
+## Deployment
+
+The project was deployed in production on alwaysdata.
+*https://zhangferment.alwaysdata.net/*
+
+For the full production deployment process and maintenance steps, see the technical handover documentation.
 
 ## Performance Optimization
 

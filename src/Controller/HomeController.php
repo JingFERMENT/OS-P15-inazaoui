@@ -49,34 +49,22 @@ class HomeController extends AbstractController
     }
 
     #[Route('/guest/{id:guest}', name: 'guest', requirements: ['id' => '\d+'])]
-    public function guest(User $guest, Request $request, MediaRepository $mediaRepository, CacheInterface $cache): Response
+    public function guest(User $guest, MediaRepository $mediaRepository, CacheInterface $cache): Response
     {
-        $page = $request->query->getInt('page', 1);
-        $limit = 6;
-        $offset = $limit * ($page - 1);
+        $cacheKey = sprintf('guest_%d_medias', $guest->getId());
 
-        $cacheKey = sprintf('one_guest_with_media_count_guest_%d_page_%d_limit_%d', $guest->getId(), $page, $limit);
-
-        // total media for this guest
-        $total = $mediaRepository->count(['user' => $guest]);
-
-        $medias = $cache->get($cacheKey, function (ItemInterface $item) use ($mediaRepository, $guest, $limit, $offset) {
+        $medias = $cache->get($cacheKey, function (ItemInterface $item) use ($mediaRepository, $guest) {
             $item->expiresAfter(3600); // adapter à la fréquence des mises à jour
 
             return $mediaRepository->findBy(
                 ['user' => $guest],
                 ['id' => 'DESC'],
-                $limit,
-                $offset,
             );
         });
 
         return $this->render('front/guest.html.twig', [
             'guest' => $guest,
             'medias' => $medias,
-            'total' => $total,
-            'limit' => $limit,
-            'page' => $page,
         ]);
     }
 
