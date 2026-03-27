@@ -1,4 +1,4 @@
-name: CI
+name: CI/CD
 
 on: 
   pull_request:
@@ -35,7 +35,7 @@ jobs:
       
     env:
       APP_ENV: test
-      DATABASE_URL: "postgresql://postgres:postgres@127.0.0.1:5432/ina_zaoui?serverVersion=16&charset=utf8"
+      DATABASE_URL: "postgresql://postgres:postgres@127.0.0.1:5432/ina_zaoui_test?serverVersion=16&charset=utf8"
 
     steps:
     # 1 Checkout
@@ -88,3 +88,48 @@ jobs:
     # 8 Tests PHPUnit
       - name: PHPUnit
         run: vendor/bin/phpunit -c phpunit.xml.dist
+
+  cd:
+    name: Deploy to alwaysdata
+    runs-on: ubuntu-latest
+    needs: ci
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure SSH
+        run: |
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          printf "%s" "${{ secrets.ALWAYSDATA_SSH_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -H "${{ secrets.ALWAYSDATA_HOST }}" >> ~/.ssh/known_hosts
+
+      - name: Deploy files
+        run: |
+          rsync -az --delete \
+            --exclude ".git" \
+            --exclude ".github" \
+            --exclude "tests" \
+            --exclude "var" \
+            --exclude ".env.local" \
+            ./ \
+            "${{ secrets.ALWAYSDATA_USER }}@${{ secrets.ALWAYSDATA_HOST }}:${{ secrets.ALWAYSDATA_PATH }}/"
+
+      - name: Run remote commands
+        run: |
+          ssh "${{ secrets.ALWAYSDATA_USER }}@${{ secrets.ALWAYSDATA_HOST }}" << 'EOF'
+            set -e
+            cd "${{ secrets.ALWAYSDATA_PATH }}"
+            composer2 install --no-dev --optimize-autoloader --no-interaction --prefer-dist
+            export APP_ENV=prod
+            php bin/console cache:clear --env=prod --no-debug
+            php bin/console cache:warmup --env=prod --no-debug
+            php bin/console doctrine:migrations:migrate --env=prod --no-interaction --allow-no-migration
+            echo "Vérification du déploiement..."
+            php bin/console about --env=prod --no-debug || true
+            # systemctl reload php8.4-fpm || true
+            echo "✅ Déploiement terminé avec succès"
+          EOF
