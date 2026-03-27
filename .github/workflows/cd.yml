@@ -88,7 +88,7 @@ jobs:
     #8 Tests PHPUnit
       - name: PHPUnit
         run: vendor/bin/phpunit -c phpunit.xml.dist
-
+  
   cd:
     name: Deploy to alwaysdata
     runs-on: ubuntu-latest
@@ -103,13 +103,18 @@ jobs:
         run: |
           mkdir -p ~/.ssh
           chmod 700 ~/.ssh
-          printf "%s" "${{ secrets.ALWAYSDATA_SSH_KEY }}" > ~/.ssh/id_ed25519
+          cat <<'EOF' > ~/.ssh/id_ed25519
+          ${{ secrets.ALWAYSDATA_SSH_KEY }}
+          EOF
+          tr -d '\r' < ~/.ssh/id_ed25519 > ~/.ssh/id_ed25519.clean
+          mv ~/.ssh/id_ed25519.clean ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
           ssh-keyscan -H "${{ secrets.ALWAYSDATA_HOST }}" >> ~/.ssh/known_hosts
+          chmod 644 ~/.ssh/known_hosts
 
       - name: Deploy files
         run: |
-          rsync -az --delete \
+          rsync -az --delete -e "ssh -i ~/.ssh/id_ed25519 -o IdentitiesOnly=yes" \
             --exclude ".git" \
             --exclude ".github" \
             --exclude "tests" \
@@ -120,7 +125,7 @@ jobs:
 
       - name: Run remote commands
         run: |
-          ssh "${{ secrets.ALWAYSDATA_USER }}@${{ secrets.ALWAYSDATA_HOST }}" << 'EOF'
+          ssh -i ~/.ssh/id_ed25519 -o IdentitiesOnly=yes "${{ secrets.ALWAYSDATA_USER }}@${{ secrets.ALWAYSDATA_HOST }}" << 'EOF'
             set -e
             cd "${{ secrets.ALWAYSDATA_PATH }}"
             composer2 install --no-dev --optimize-autoloader --no-interaction --prefer-dist
@@ -128,7 +133,6 @@ jobs:
             php bin/console cache:clear --env=prod --no-debug
             php bin/console cache:warmup --env=prod --no-debug
             php bin/console doctrine:migrations:migrate --env=prod --no-interaction --allow-no-migration
-            echo "Vérification du déploiement..."
             php bin/console about --env=prod --no-debug || true
             echo "✅ Déploiement terminé avec succès"
           EOF
