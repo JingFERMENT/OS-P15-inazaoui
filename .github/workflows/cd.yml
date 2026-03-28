@@ -132,7 +132,12 @@ jobs:
           "${{ secrets.ALWAYSDATA_USER }}@${{ secrets.ALWAYSDATA_HOST }}" << 'EOF'
           set -e
           cd "${{ secrets.ALWAYSDATA_PATH }}"
+
+          export APP_ENV=prod
+          export APP_DEBUG=0
+
           composer2 install --no-dev --optimize-autoloader --no-interaction
+          
           php bin/console cache:clear --env=prod --no-warmup
           php bin/console cache:warmup --env=prod
           EOF
