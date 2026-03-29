@@ -10,9 +10,8 @@ This document complements the README and is intended to help the next developer 
 - [Deployment on alwaysdata](#4-deployment-on-alwaysdata)
 - [Security and Access Control](#5-security-and-access-control)
 - [Testing Strategy](#6-testing-strategy)
-- [Continuous Integration](#7-continuous-integration)
-- [Possible Improvements](#8-possible-improvements)
-- [Handover Notes](#9-handover-notes)
+- [Possible Improvements](#7-possible-improvements)
+- [Handover Notes](#8-handover-notes)
 
 ## 1. Application Architecture
 
@@ -187,45 +186,90 @@ Before deployment, the project must be stable locally:
 A PostgreSQL database was created from the alwaysdata administration panel.
 The database name, username, password, host, and port were then reused in the Symfony environment configuration.
 
-#### 3. Connect to the server through SSH
+#### 3. Configure SSH access for automated deployment
 
-The deployment was carried out by connecting to the alwaysdata server through **SSH**.
-This step allows the developer to access the server environment directly and run all required deployment commands from the terminal.
-*(ex: ssh username@ssh-username.alwaysdata.net)*
+To allow GitHub Actions to deploy the project to alwaysdata through SSH:
 
-#### 4. Clone the project
+- an SSH key pair is generated locally
+- the **public key** is added to the alwaysdata server in `~/.ssh/authorized_keys`
+- the **private key** is stored in GitHub Actions as the secret `ALWAYSDATA_SSH_KEY`
 
-The project is transferred to the server by cloning the Git repository
+Additional GitHub secrets are also configured:
 
-#### 4. Install dependencies
+- `ALWAYSDATA_HOST`
+- `ALWAYSDATA_USER`
+- `ALWAYSDATA_PATH`
 
-Once connected to the server and placed in the project directory, the dependencies are installed with Composer in production mode.
+This allows the GitHub Actions runner to connect securely to the production server during deployment.
+
+#### 4. Run CI before deployment
+
+Before deployment, the GitHub Actions workflow runs the CI pipeline:
+
+- install PHP dependencies
+- warm up Symfony cache in test environment
+- run PHP CS Fixer
+- run PHPStan
+- run Doctrine migrations and fixtures in test environment
+- run PHPUnit tests
+
+Deployment only starts if the CI job passes successfully.
+
+#### 5. Trigger deployment from GitHub Actions
+
+The deployment job is triggered automatically on:
+
+- push to the `main` branch
+
+The workflow connects to alwaysdata through SSH and executes the deployment steps remotely.
+
+#### 6. Synchronize project files to the server
+
+The project files are transferred from GitHub Actions to alwaysdata using `rsync`.
+
+Some files and directories are excluded from synchronization, such as:
+
+- `.git`
+- `.github`
+- `tests`
+- `var`
+- `.env.local`
+
+This avoids sending unnecessary local or development files to production.
+
+#### 7. Install production dependencies
+
+Once connected to the server and placed in the project directory, Composer installs the production dependencies:
 
 ```bash
-composer install --no-dev --optimize-autoloader
+composer2 install --no-dev --optimize-autoloader --no-interaction
 ```
 
-#### 5. Configure the production environment
+This ensures that only production packages are installed on the server.
 
-The production environment must be configured with values such as:
+
+#### 8. Configure the production environment
+
+The deployment runs with the production environment variables, including:
 
 APP_ENV=prod
 APP_DEBUG=0
 APP_SECRET
 DATABASE_URL
 
-This ensures that the application runs with the correct production database and environment settings.
+This ensures that Symfony uses the correct production configuration and database connection.
 
-#### 6. Configure the site root
+#### 9. Configure the site root
 
-In alwaysdata, the web site must point to the Symfony public/ directory.
+In alwaysdata, the website root must point to the Symfony public/ directory.
+
 This is required because public/ is the only directory that should be exposed by the web server.
 
-#### 7. Add URL rewriting
+#### 10. Add URL rewriting
 
 A .htaccess file was added inside the public/ directory so that Symfony routes can work correctly without exposing index.php in the URL.
 
-#### 8. Run database migrations
+#### 11. Run database migrations
 
 Once the database connection is configured, the schema is updated by executing migrations:
 
@@ -233,14 +277,14 @@ Once the database connection is configured, the schema is updated by executing m
 php bin/console doctrine:migrations:migrate -n --env=prod
 ```
 
-9. Clear and warm up cache
+#### 12. Clear and warm up cache
 
 ```bash
 php bin/console cache:clear --env=prod
 php bin/console cache:warmup --env=prod
 ```
 
-10. Final verification
+#### 13. Final verification
 
 After deployment, the following elements should be tested:
 
@@ -291,18 +335,7 @@ Most tests are functional tests, with a few unit tests for services and entities
 
 See the full report here: [Coverage Report](public/coverage-report.html)
 
-## 7. Continuous Integration
-
-A GitHub Actions pipeline was added to automate quality checks.
-
-The purpose is to help ensure that new changes do not introduce regressions.
-
-Automated checks in this project include:
-- install dependencies
-- run tests
-- run code quality checks
-
-## 8. Possible Improvements
+## 7. Possible Improvements
 
 Possible future improvements include:
 - improving responsive design
@@ -310,7 +343,7 @@ Possible future improvements include:
 - use a framework front such as React or Vue
 - improving the front-end design and user experience
 
-## 9. Handover Notes
+## 8. Handover Notes
 
 Recommended first steps for a new developer:
 - read the README
